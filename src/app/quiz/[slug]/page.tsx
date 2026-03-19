@@ -1,0 +1,106 @@
+import { supabase } from "../../../lib/supabase";
+import QuizPlayer from "../QuizPlayer";
+
+type Quiz = {
+  id: number;
+  title: string;
+  description: string | null;
+  slug: string;
+  week_label?: string | null;
+};
+
+type Question = {
+  id: number;
+  quiz_id: number;
+  question_text: string;
+  question_order: number;
+  image_url?: string | null;
+  audio_url?: string | null;
+  youtube_url?: string | null;
+  media_caption?: string | null;
+};
+
+type Choice = {
+  id: number;
+  question_id: number;
+  choice_text: string;
+  choice_order: number;
+};
+
+type QuizPageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+export default async function QuizBySlugPage({ params }: QuizPageProps) {
+  const { slug } = await params;
+
+  const { data: quiz, error: quizError } = await supabase
+    .from("quizzes")
+    .select("id, title, description, slug, week_label")
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .maybeSingle<Quiz>();
+
+  if (quizError) {
+    return (
+      <main className="min-h-screen bg-black text-white px-6 py-16">
+        <div className="mx-auto max-w-3xl rounded-xl border border-red-800 bg-red-950/40 p-6 text-red-300">
+          Quiz load error: {quizError.message}
+        </div>
+      </main>
+    );
+  }
+
+  if (!quiz) {
+    return (
+      <main className="min-h-screen bg-black text-white px-6 py-16">
+        <div className="mx-auto max-w-3xl rounded-xl border border-zinc-800 bg-zinc-950 p-6 text-zinc-400">
+          Quiz not found.
+        </div>
+      </main>
+    );
+  }
+
+  const { data: questionsData, error: questionsError } = await supabase
+    .from("questions")
+    .select(
+      "id, quiz_id, question_text, question_order, image_url, audio_url, youtube_url, media_caption"
+    )
+    .eq("quiz_id", quiz.id)
+    .order("question_order", { ascending: true });
+
+  if (questionsError) {
+    return (
+      <main className="min-h-screen bg-black text-white px-6 py-16">
+        <div className="mx-auto max-w-3xl rounded-xl border border-red-800 bg-red-950/40 p-6 text-red-300">
+          Questions load error: {questionsError.message}
+        </div>
+      </main>
+    );
+  }
+
+  const questions = questionsData ?? [];
+  const questionIds = questions.map((question) => question.id);
+
+  const { data: choicesData, error: choicesError } = await supabase
+    .from("choices")
+    .select("id, question_id, choice_text, choice_order")
+    .in("question_id", questionIds.length > 0 ? questionIds : [-1])
+    .order("choice_order", { ascending: true });
+
+  if (choicesError) {
+    return (
+      <main className="min-h-screen bg-black text-white px-6 py-16">
+        <div className="mx-auto max-w-3xl rounded-xl border border-red-800 bg-red-950/40 p-6 text-red-300">
+          Choices load error: {choicesError.message}
+        </div>
+      </main>
+    );
+  }
+
+  const choices = choicesData ?? [];
+
+  return <QuizPlayer quiz={quiz} questions={questions} choices={choices} />;
+}

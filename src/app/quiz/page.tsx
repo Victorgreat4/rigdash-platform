@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { supabase } from "../../lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 type QuizListItem = {
   id: number;
@@ -11,7 +11,18 @@ type QuizListItem = {
   published_at: string | null;
 };
 
+type Submission = {
+  quiz_id: number;
+  score: number;
+};
+
 export default async function QuizHubPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const { data, error } = await supabase
     .from("quizzes")
     .select(
@@ -33,6 +44,37 @@ export default async function QuizHubPage() {
   const quizzes: QuizListItem[] = data ?? [];
   const featuredQuiz = quizzes.find((quiz) => quiz.featured);
   const archiveQuizzes = quizzes.filter((quiz) => !quiz.featured);
+
+  let submissionMap = new Map<number, Submission>();
+
+  if (user) {
+    const quizIds = quizzes.map((quiz) => quiz.id);
+
+    const { data: submissions } = await supabase
+      .from("submissions")
+      .select("quiz_id, score")
+      .eq("user_id", user.id)
+      .in("quiz_id", quizIds.length > 0 ? quizIds : [-1]);
+
+    submissionMap = new Map((submissions ?? []).map((s) => [s.quiz_id, s]));
+  }
+
+  function renderStatus(quizId: number) {
+    const submission = submissionMap.get(quizId);
+
+    if (!submission) return null;
+
+    return (
+      <div className="mt-3 flex flex-wrap gap-3">
+        <span className="rounded-full border border-emerald-700 px-3 py-1 text-sm text-emerald-300">
+          Completed
+        </span>
+        <span className="text-sm text-zinc-400">
+          Score: {submission.score}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-black text-white px-6 py-16">
@@ -65,6 +107,8 @@ export default async function QuizHubPage() {
               <p className="text-zinc-400">
                 {featuredQuiz.description ?? "No description provided."}
               </p>
+
+              {renderStatus(featuredQuiz.id)}
             </Link>
           </section>
         ) : (
@@ -105,6 +149,8 @@ export default async function QuizHubPage() {
                   <p className="text-zinc-400">
                     {quiz.description ?? "No description provided."}
                   </p>
+
+                  {renderStatus(quiz.id)}
                 </Link>
               ))}
             </div>

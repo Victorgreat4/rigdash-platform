@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { unstable_noStore as noStore } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import SignOutButton from "./SignOutButton";
 
 export default async function Navbar() {
+  noStore();
+
   const supabase = await createClient();
 
   const {

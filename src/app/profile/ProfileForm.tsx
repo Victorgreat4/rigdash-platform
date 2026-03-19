@@ -48,14 +48,8 @@ export default function ProfileForm({
   function validateUsername(value: string) {
     const trimmed = value.trim();
 
-    if (trimmed.length < 3) {
-      return "Username must be at least 3 characters.";
-    }
-
-    if (trimmed.length > 20) {
-      return "Username must be at most 20 characters.";
-    }
-
+    if (trimmed.length < 3) return "Username must be at least 3 characters.";
+    if (trimmed.length > 20) return "Username must be at most 20 characters.";
     if (!/^[a-zA-Z0-9_]+$/.test(trimmed)) {
       return "Username can only contain letters, numbers, and underscores.";
     }
@@ -90,50 +84,52 @@ export default function ProfileForm({
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
     setHasUnsavedChanges(true);
-    setMessage("New avatar selected. Save profile to apply it.");
+    setMessage("New profile picture selected. Click Save Profile to apply it.");
   }
 
- async function uploadAvatarIfNeeded(): Promise<string> {
-  if (!selectedFile) {
-    return avatarPath;
-  }
-
-  const extension = selectedFile.name.split(".").pop()?.toLowerCase() || "jpg";
-  const filePath = `${userId}/avatar.${extension}`;
-
-  const { data: existingFiles, error: listError } = await supabase.storage
-    .from("avatars")
-    .list(userId);
-
-  if (listError) {
-    throw new Error(listError.message);
-  }
-
-  if (existingFiles && existingFiles.length > 0) {
-    const filesToRemove = existingFiles.map((file) => `${userId}/${file.name}`);
-
-    const { error: removeError } = await supabase.storage
-      .from("avatars")
-      .remove(filesToRemove);
-
-    if (removeError) {
-      throw new Error(removeError.message);
+  async function uploadAvatarIfNeeded(): Promise<string> {
+    if (!selectedFile) {
+      return avatarPath;
     }
+
+    const extension = selectedFile.name.split(".").pop()?.toLowerCase() || "jpg";
+    const timestamp = Date.now();
+    const filePath = `${userId}/avatar-${timestamp}.${extension}`;
+
+    const { data: existingFiles, error: listError } = await supabase.storage
+      .from("avatars")
+      .list(userId);
+
+    if (listError) {
+      throw new Error(listError.message);
+    }
+
+    if (existingFiles && existingFiles.length > 0) {
+      const filesToRemove = existingFiles.map((file) => `${userId}/${file.name}`);
+
+      const { error: removeError } = await supabase.storage
+        .from("avatars")
+        .remove(filesToRemove);
+
+      if (removeError) {
+        throw new Error(removeError.message);
+      }
+    }
+
+    const { error: uploadError } = await supabase.storage
+      .from("avatars")
+      .upload(filePath, selectedFile, {
+        upsert: false,
+        contentType: selectedFile.type,
+      });
+
+    if (uploadError) {
+      throw new Error(uploadError.message);
+    }
+
+    return filePath;
   }
 
-  const { error: uploadError } = await supabase.storage
-    .from("avatars")
-    .upload(filePath, selectedFile, {
-      upsert: true,
-      contentType: selectedFile.type,
-    });
-
-  if (uploadError) {
-    throw new Error(uploadError.message);
-  }
-
-  return filePath;
-}
   async function handleSave() {
     setSaving(true);
     setError("");
@@ -227,7 +223,7 @@ export default function ProfileForm({
             />
             {previewUrl && (
               <p className="mt-2 text-xs text-amber-400">
-                Preview only. Save profile to apply this avatar.
+                Preview only. Save Profile to apply this new picture.
               </p>
             )}
           </div>
@@ -237,12 +233,21 @@ export default function ProfileForm({
           </div>
         )}
 
-        <input
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
-          className="block w-full text-sm text-zinc-400"
-        />
+        <label className="inline-flex cursor-pointer items-center rounded-lg border border-zinc-700 bg-black px-4 py-2 text-sm text-white hover:border-zinc-500">
+          Choose New Picture
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
+            className="hidden"
+          />
+        </label>
+
+        {selectedFile && (
+          <p className="mt-2 text-sm text-zinc-400">
+            Selected: {selectedFile.name}
+          </p>
+        )}
 
         <p className="mt-2 text-xs text-zinc-500">
           JPG, PNG, or WEBP. Max 2 MB.

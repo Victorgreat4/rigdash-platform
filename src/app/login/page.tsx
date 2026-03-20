@@ -1,6 +1,28 @@
 import LoginForm from "./LoginForm";
 
-export default function LoginPage() {
+type LoginPageProps = {
+  searchParams: Promise<{
+    message?: string;
+  }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const params = await searchParams;
+  const message = params.message;
+
+  let bannerText = "";
+
+  if (message === "verify-new-email") {
+    bannerText =
+      "Please verify your new email address, then sign in again.";
+  } else if (message === "password-updated") {
+    bannerText =
+      "Password updated successfully. Please sign in again.";
+  } else if (message === "account-updated") {
+    bannerText =
+      "Account updated. Verify your new email if needed, then sign in again.";
+  }
+
   return (
     <main className="min-h-screen bg-black text-white px-6 py-16">
       <div className="mx-auto max-w-md">
@@ -9,6 +31,12 @@ export default function LoginPage() {
           Sign in or create an account to save quiz results and appear on the
           leaderboard.
         </p>
+
+        {bannerText && (
+          <div className="mb-6 rounded-lg border border-emerald-800 bg-emerald-950/40 p-4 text-sm text-emerald-300">
+            {bannerText}
+          </div>
+        )}
 
         <LoginForm />
       </div>

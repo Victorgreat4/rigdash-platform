@@ -179,10 +179,8 @@ export default function QuizPlayer({
                 return;
             }
 
-            setResult({
-                score: data.score,
-                totalQuestions: data.totalQuestions,
-            });
+            window.location.href = "/quiz?submitted=1";
+            return;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
         } finally {

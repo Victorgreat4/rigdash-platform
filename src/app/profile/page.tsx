@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ProfileForm from "./ProfileForm";
+import AccountSecurityForm from "./AccountSecurityForm";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -16,7 +17,7 @@ export default async function ProfilePage() {
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("id, username, display_name, avatar_path")
+    .select("id, username, avatar_path")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -32,19 +33,22 @@ export default async function ProfilePage() {
 
   return (
     <main className="min-h-screen bg-black px-6 py-16 text-white">
-      <div className="mx-auto max-w-2xl">
-        <h1 className="mb-4 text-4xl font-bold">Profile Settings</h1>
-        <p className="mb-8 text-zinc-400">
-          Choose the name and avatar that will appear on the leaderboard.
-        </p>
+      <div className="mx-auto max-w-2xl space-y-8">
+        <div>
+          <h1 className="mb-4 text-4xl font-bold">Profile Settings</h1>
+          <p className="text-zinc-400">
+            Manage your leaderboard identity and account security.
+          </p>
+        </div>
 
         <ProfileForm
           userId={user.id}
           email={user.email ?? ""}
           initialUsername={profile?.username ?? ""}
-          initialDisplayName={profile?.display_name ?? ""}
           initialAvatarPath={profile?.avatar_path ?? ""}
         />
+
+        <AccountSecurityForm currentEmail={user.email ?? ""} />
       </div>
     </main>
   );

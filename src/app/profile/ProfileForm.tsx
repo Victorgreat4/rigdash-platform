@@ -7,7 +7,6 @@ type ProfileFormProps = {
   userId: string;
   email: string;
   initialUsername: string;
-  initialDisplayName: string;
   initialAvatarPath: string;
 };
 
@@ -18,13 +17,11 @@ export default function ProfileForm({
   userId,
   email,
   initialUsername,
-  initialDisplayName,
   initialAvatarPath,
 }: ProfileFormProps) {
   const supabase = createClient();
 
   const [username, setUsername] = useState(initialUsername);
-  const [displayName, setDisplayName] = useState(initialDisplayName);
   const [avatarPath, setAvatarPath] = useState(initialAvatarPath);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -148,7 +145,6 @@ export default function ProfileForm({
       const { error: upsertError } = await supabase.from("profiles").upsert({
         id: userId,
         username: username.trim(),
-        display_name: displayName.trim() || null,
         avatar_path: finalAvatarPath || null,
       });
 
@@ -169,9 +165,11 @@ export default function ProfileForm({
   }
 
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-6">
+    <section className="rounded-xl border border-zinc-800 bg-zinc-950 p-6">
+      <h2 className="mb-6 text-2xl font-bold">Profile</h2>
+
       <div className="mb-6">
-        <label className="mb-2 block text-sm text-zinc-400">Email</label>
+        <label className="mb-2 block text-sm text-zinc-400">Current Email</label>
         <input
           type="text"
           value={email}
@@ -195,20 +193,6 @@ export default function ProfileForm({
         <p className="mt-2 text-xs text-zinc-500">
           3–20 characters. Letters, numbers, underscores only.
         </p>
-      </div>
-
-      <div className="mb-6">
-        <label className="mb-2 block text-sm">Display Name (optional)</label>
-        <input
-          type="text"
-          value={displayName}
-          onChange={(e) => {
-            setDisplayName(e.target.value);
-            setHasUnsavedChanges(true);
-          }}
-          placeholder="Optional display name"
-          className="w-full rounded-lg border border-zinc-700 bg-black px-4 py-3 text-white outline-none"
-        />
       </div>
 
       <div className="mb-6">
@@ -274,6 +258,6 @@ export default function ProfileForm({
       >
         {saving ? "Saving..." : "Save Profile"}
       </button>
-    </div>
+    </section>
   );
 }

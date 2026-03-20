@@ -14,16 +14,18 @@ export default async function Navbar() {
 
   let username = "";
   let avatarPath = "";
+  let isAdmin = false;
 
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("username, avatar_path")
+      .select("username, avatar_path, is_admin")
       .eq("id", user.id)
       .maybeSingle();
 
     username = profile?.username ?? "";
     avatarPath = profile?.avatar_path ?? "";
+    isAdmin = profile?.is_admin ?? false;
   }
 
   let avatarUrl = "";
@@ -57,7 +59,12 @@ export default async function Navbar() {
               Login
             </Link>
           ) : (
-            <>
+
+            <>{isAdmin && (
+              <Link href="/admin" className="hover:text-white">
+                Admin
+              </Link>
+            )}
               <Link href="/profile" className="hover:text-white">
                 Profile
               </Link>

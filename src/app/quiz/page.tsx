@@ -16,7 +16,16 @@ type Submission = {
   score: number;
 };
 
-export default async function QuizHubPage() {
+type QuizHubPageProps = {
+  searchParams: Promise<{
+    submitted?: string;
+  }>;
+};
+
+export default async function QuizHubPage({ searchParams }: QuizHubPageProps) {
+  const params = await searchParams;
+  const justSubmitted = params.submitted === "1";
+
   const supabase = await createClient();
 
   const {
@@ -83,6 +92,12 @@ export default async function QuizHubPage() {
         <p className="text-zinc-400 mb-10">
           Play the current weekly quiz and browse previous weeks.
         </p>
+
+        {justSubmitted && (
+          <div className="mb-8 rounded-xl border border-emerald-800 bg-emerald-950/30 p-4 text-emerald-300">
+            Quiz submitted successfully. Your result has been saved.
+          </div>
+        )}
 
         {featuredQuiz ? (
           <section className="mb-12">

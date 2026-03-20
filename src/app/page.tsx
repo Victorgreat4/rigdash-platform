@@ -11,6 +11,16 @@ export default function Home() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Link
+            href="/tools"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 transition hover:border-zinc-600"
+          >
+            <h2 className="mb-2 text-2xl font-semibold">Tools</h2>
+            <p className="text-zinc-400">
+              Desktop apps, utilities, downloads, and release pages.
+            </p>
+          </Link>
+
+          <Link
             href="/quiz"
             className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 hover:border-zinc-600 transition"
           >

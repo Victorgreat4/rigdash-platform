@@ -214,15 +214,25 @@ export default function BeerRatingsClient({ ratings }: BeerRatingsClientProps) {
         </div>
 
         {allVisibleCount < byNewest.length ? (
-          <button
-            type="button"
-            onClick={() =>
-              setAllVisibleCount((count) => count + ALL_RATINGS_PAGE_SIZE)
-            }
-            className="mt-6 rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:border-zinc-500"
-          >
-            Load More
-          </button>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                setAllVisibleCount((count) => count + ALL_RATINGS_PAGE_SIZE)
+              }
+              className="rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:border-zinc-500"
+            >
+              Load More
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setAllVisibleCount(byNewest.length)}
+              className="rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:border-zinc-500"
+            >
+              Load All
+            </button>
+          </div>
         ) : null}
       </section>
     </div>

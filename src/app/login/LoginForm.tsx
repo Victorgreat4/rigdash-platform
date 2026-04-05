@@ -12,6 +12,7 @@ export default function LoginForm() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
 
   async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -48,6 +49,38 @@ export default function LoginForm() {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleForgotPassword() {
+    setError("");
+    setMessage("");
+
+    if (!email.trim()) {
+      setError("Enter your email first, then click Forgot password.");
+      return;
+    }
+
+    setResetLoading(true);
+
+    try {
+      const redirectTo = `${window.location.origin}/reset-password`;
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo,
+      });
+
+      if (error) {
+        setError(error.message);
+        return;
+      }
+
+      setMessage(
+        "Password reset email sent. Open the link in your email to choose a new password."
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setResetLoading(false);
     }
   }
 
@@ -102,6 +135,16 @@ export default function LoginForm() {
             className="w-full rounded-lg border border-zinc-700 bg-black px-4 py-3 text-white outline-none"
             required
           />
+          {mode === "signin" ? (
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              disabled={loading || resetLoading}
+              className="mt-2 text-sm text-zinc-400 underline-offset-4 hover:text-white hover:underline disabled:opacity-50"
+            >
+              {resetLoading ? "Sending reset email..." : "Forgot password?"}
+            </button>
+          ) : null}
         </div>
 
         {error && (

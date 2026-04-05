@@ -19,6 +19,26 @@ export default function ToolsPage() {
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <Link
+            href="/paths"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 transition hover:border-zinc-600"
+          >
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs text-zinc-300">
+                Guided
+              </span>
+              <span className="rounded-full border border-emerald-700 px-3 py-1 text-xs text-emerald-300">
+                Learning
+              </span>
+            </div>
+
+            <h2 className="mb-2 text-2xl font-semibold">Learning Paths</h2>
+            <p className="text-zinc-400">
+              Follow ordered cartridge and weapon sequences instead of relying
+              only on raw browsing.
+            </p>
+          </Link>
+
+          <Link
             href="/tools/firearm-catalog"
             className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 transition hover:border-zinc-600"
           >

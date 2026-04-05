@@ -170,3 +170,138 @@ on conflict (weapon_id, cartridge_id) do update
 set
   compatibility_type = excluded.compatibility_type,
   notes = excluded.notes;
+
+insert into public.learning_paths (
+  title,
+  slug,
+  description,
+  level,
+  estimated_minutes
+)
+values
+  (
+    'First steps with service pistols',
+    'first-steps-service-pistols',
+    'Start with a common pistol cartridge, move into two compatible sidearms, and learn how platform comparisons work.',
+    'beginner',
+    12
+  ),
+  (
+    'Understanding rifle compatibility',
+    'understanding-rifle-compatibility',
+    'Follow one rifle cartridge into a compatible platform so the relationship between round and weapon feels concrete.',
+    'beginner',
+    10
+  ),
+  (
+    'Compare common defensive handgun rounds',
+    'compare-defensive-handgun-rounds',
+    'Use neighboring pistol cartridges and compatible handguns to build side-by-side intuition.',
+    'intermediate',
+    14
+  )
+on conflict (slug) do update
+set
+  title = excluded.title,
+  description = excluded.description,
+  level = excluded.level,
+  estimated_minutes = excluded.estimated_minutes;
+
+insert into public.learning_path_items (
+  learning_path_id,
+  item_order,
+  entry_type,
+  cartridge_id,
+  weapon_id,
+  title_override,
+  description
+)
+values
+  (
+    (select id from public.learning_paths where slug = 'first-steps-service-pistols'),
+    1,
+    'cartridge',
+    (select id from public.cartridges where slug = '9x19mm-nato'),
+    null,
+    'Start with 9x19mm NATO',
+    'Learn the round first so the later weapon pages have context.'
+  ),
+  (
+    (select id from public.learning_paths where slug = 'first-steps-service-pistols'),
+    2,
+    'weapon',
+    null,
+    (select id from public.weapons where slug = 'glock-17-gen5'),
+    'See a full-size striker-fired pistol',
+    'Connect the cartridge to a widely recognized sidearm platform.'
+  ),
+  (
+    (select id from public.learning_paths where slug = 'first-steps-service-pistols'),
+    3,
+    'weapon',
+    null,
+    (select id from public.weapons where slug = 'hk-usp-45'),
+    'Contrast against another service pistol',
+    'Notice what changes when the cartridge and operating feel shift.'
+  ),
+  (
+    (select id from public.learning_paths where slug = 'understanding-rifle-compatibility'),
+    1,
+    'cartridge',
+    (select id from public.cartridges where slug = '5-56x45mm-nato'),
+    null,
+    'Meet a common rifle cartridge',
+    'Use the cartridge as the anchor before stepping into the platform.'
+  ),
+  (
+    (select id from public.learning_paths where slug = 'understanding-rifle-compatibility'),
+    2,
+    'weapon',
+    null,
+    (select id from public.weapons where slug = 'mr556-a1'),
+    'Move into a compatible rifle',
+    'See how compatibility turns a cartridge spec into a real platform choice.'
+  ),
+  (
+    (select id from public.learning_paths where slug = 'compare-defensive-handgun-rounds'),
+    1,
+    'cartridge',
+    (select id from public.cartridges where slug = '9x19mm-nato'),
+    null,
+    'Review 9x19mm NATO',
+    'Start with a common baseline for modern handguns.'
+  ),
+  (
+    (select id from public.learning_paths where slug = 'compare-defensive-handgun-rounds'),
+    2,
+    'cartridge',
+    (select id from public.cartridges where slug = '45-acp'),
+    null,
+    'Compare with .45 ACP',
+    'Use a second cartridge to make tradeoffs and family differences easier to notice.'
+  ),
+  (
+    (select id from public.learning_paths where slug = 'compare-defensive-handgun-rounds'),
+    3,
+    'weapon',
+    null,
+    (select id from public.weapons where slug = 'glock-17-gen5'),
+    'See the 9mm platform pairing',
+    'Connect the first cartridge to a representative sidearm.'
+  ),
+  (
+    (select id from public.learning_paths where slug = 'compare-defensive-handgun-rounds'),
+    4,
+    'weapon',
+    null,
+    (select id from public.weapons where slug = 'hk-usp-45'),
+    'See the .45 platform pairing',
+    'Finish by comparing two cartridge-to-weapon relationships side by side.'
+  )
+on conflict (learning_path_id, item_order) do update
+set
+  entry_type = excluded.entry_type,
+  cartridge_id = excluded.cartridge_id,
+  weapon_id = excluded.weapon_id,
+  title_override = excluded.title_override,
+  description = excluded.description;

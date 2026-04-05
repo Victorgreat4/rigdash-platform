@@ -55,6 +55,10 @@ export default async function Navbar() {
             Firearm Catalog
           </Link>
 
+          <Link href="/paths" className="hover:text-white">
+            Paths
+          </Link>
+
           {canSeeBeerRatings ? (
             <Link href="/tools/beer-ratings" className="hover:text-white">
               Beer Ratings

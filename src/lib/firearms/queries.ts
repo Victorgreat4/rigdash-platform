@@ -54,6 +54,36 @@ export type WeaponRecord = {
   compatibility: CompatibilityRecord[];
 };
 
+export type LearningPathEntrySummary = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  typeLabel: string;
+  href: string;
+};
+
+export type LearningPathItemRecord = {
+  id: string;
+  item_order: number;
+  entry_type: "cartridge" | "weapon";
+  title_override: string | null;
+  description: string | null;
+  cartridge: CartridgeRecord | null;
+  weapon: WeaponRecord | null;
+};
+
+export type LearningPathRecord = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  level: string;
+  estimated_minutes: number | null;
+  created_at: string;
+  items: LearningPathItemRecord[];
+};
+
 const CARTRIDGE_SELECT = `
   id,
   name,
@@ -160,6 +190,101 @@ const COMPATIBILITY_SELECT = `
   )
 `;
 
+const LEARNING_PATH_ITEM_SELECT = `
+  id,
+  item_order,
+  entry_type,
+  title_override,
+  description,
+  cartridge:cartridges (
+    id,
+    name,
+    slug,
+    caliber,
+    cartridge_type,
+    casing_material,
+    notes,
+    created_at,
+    manufacturer:manufacturers (
+      id,
+      name,
+      slug,
+      website
+    ),
+    country:countries (
+      id,
+      name,
+      slug,
+      iso_alpha2
+    )
+  ),
+  weapon:weapons (
+    id,
+    name,
+    slug,
+    weapon_type,
+    platform,
+    action_type,
+    barrel_length_mm,
+    notes,
+    created_at,
+    manufacturer:manufacturers (
+      id,
+      name,
+      slug,
+      website
+    ),
+    country:countries (
+      id,
+      name,
+      slug,
+      iso_alpha2
+    ),
+    compatibility:weapon_cartridge_compatibility (
+      id,
+      weapon_id,
+      compatibility_type,
+      notes,
+      created_at,
+      cartridge:cartridges (
+        id,
+        name,
+        slug,
+        caliber,
+        cartridge_type,
+        casing_material,
+        notes,
+        created_at,
+        manufacturer:manufacturers (
+          id,
+          name,
+          slug,
+          website
+        ),
+        country:countries (
+          id,
+          name,
+          slug,
+          iso_alpha2
+        )
+      )
+    )
+  )
+`;
+
+const LEARNING_PATH_SELECT = `
+  id,
+  title,
+  slug,
+  description,
+  level,
+  estimated_minutes,
+  created_at,
+  items:learning_path_items (
+    ${LEARNING_PATH_ITEM_SELECT}
+  )
+`;
+
 export async function getCartridges(client: AppSupabaseClient) {
   return client
     .from("cartridges")
@@ -182,4 +307,88 @@ export async function getWeaponCartridgeCompatibility(client: AppSupabaseClient)
     .select(COMPATIBILITY_SELECT)
     .order("created_at", { ascending: true })
     .returns<CompatibilityRecord[]>();
+}
+
+export async function getCartridgeBySlug(
+  client: AppSupabaseClient,
+  slug: string
+) {
+  return client
+    .from("cartridges")
+    .select(CARTRIDGE_SELECT)
+    .eq("slug", slug)
+    .maybeSingle()
+    .returns<CartridgeRecord | null>();
+}
+
+export async function getWeaponBySlug(client: AppSupabaseClient, slug: string) {
+  return client
+    .from("weapons")
+    .select(WEAPON_SELECT)
+    .eq("slug", slug)
+    .maybeSingle()
+    .returns<WeaponRecord | null>();
+}
+
+export async function getLearningPaths(client: AppSupabaseClient) {
+  return client
+    .from("learning_paths")
+    .select(LEARNING_PATH_SELECT)
+    .order("title", { ascending: true })
+    .returns<LearningPathRecord[]>();
+}
+
+export async function getLearningPathBySlug(
+  client: AppSupabaseClient,
+  slug: string
+) {
+  return client
+    .from("learning_paths")
+    .select(LEARNING_PATH_SELECT)
+    .eq("slug", slug)
+    .maybeSingle()
+    .returns<LearningPathRecord | null>();
+}
+
+export function getLearningPathItemSummary(
+  item: LearningPathItemRecord
+): LearningPathEntrySummary {
+  if (item.entry_type === "cartridge" && item.cartridge) {
+    return {
+      id: item.cartridge.id,
+      name: item.title_override ?? item.cartridge.name,
+      slug: item.cartridge.slug,
+      description:
+        item.description ??
+        item.cartridge.notes ??
+        "Open this cartridge to continue the path.",
+      typeLabel: `${item.cartridge.caliber} / ${item.cartridge.cartridge_type}`,
+      href: `/tools/firearm-catalog/cartridges/${item.cartridge.slug}`,
+    };
+  }
+
+  if (item.weapon) {
+    return {
+      id: item.weapon.id,
+      name: item.title_override ?? item.weapon.name,
+      slug: item.weapon.slug,
+      description:
+        item.description ??
+        item.weapon.notes ??
+        "Open this weapon to continue the path.",
+      typeLabel: [item.weapon.weapon_type, item.weapon.platform, item.weapon.action_type]
+        .filter(Boolean)
+        .join(" / "),
+      href: `/tools/firearm-catalog/weapons/${item.weapon.slug}`,
+    };
+  }
+
+  return {
+    id: item.id,
+    name: item.title_override ?? "Unknown entry",
+    slug: item.id,
+    description: item.description ?? "Path item details are unavailable.",
+    typeLabel: item.entry_type,
+    href: "/paths",
+  };
 }

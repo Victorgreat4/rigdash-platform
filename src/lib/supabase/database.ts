@@ -122,6 +122,94 @@ export type Database = {
           }
         ];
       };
+      learning_path_items: {
+        Row: {
+          cartridge_id: string | null;
+          created_at: string;
+          description: string | null;
+          entry_type: string;
+          id: string;
+          learning_path_id: string;
+          item_order: number;
+          title_override: string | null;
+          weapon_id: string | null;
+        };
+        Insert: {
+          cartridge_id?: string | null;
+          created_at?: string;
+          description?: string | null;
+          entry_type: string;
+          id?: string;
+          learning_path_id: string;
+          item_order: number;
+          title_override?: string | null;
+          weapon_id?: string | null;
+        };
+        Update: {
+          cartridge_id?: string | null;
+          created_at?: string;
+          description?: string | null;
+          entry_type?: string;
+          id?: string;
+          learning_path_id?: string;
+          item_order?: number;
+          title_override?: string | null;
+          weapon_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "learning_path_items_cartridge_id_fkey";
+            columns: ["cartridge_id"];
+            isOneToOne: false;
+            referencedRelation: "cartridges";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "learning_path_items_learning_path_id_fkey";
+            columns: ["learning_path_id"];
+            isOneToOne: false;
+            referencedRelation: "learning_paths";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "learning_path_items_weapon_id_fkey";
+            columns: ["weapon_id"];
+            isOneToOne: false;
+            referencedRelation: "weapons";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      learning_paths: {
+        Row: {
+          created_at: string;
+          description: string;
+          estimated_minutes: number | null;
+          id: string;
+          level: string;
+          slug: string;
+          title: string;
+        };
+        Insert: {
+          created_at?: string;
+          description: string;
+          estimated_minutes?: number | null;
+          id?: string;
+          level?: string;
+          slug: string;
+          title: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string;
+          estimated_minutes?: number | null;
+          id?: string;
+          level?: string;
+          slug?: string;
+          title?: string;
+        };
+        Relationships: [];
+      };
       weapons: {
         Row: {
           action_type: string | null;

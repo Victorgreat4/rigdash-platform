@@ -15,19 +15,17 @@ export default async function Navbar() {
 
   let username = "";
   let avatarPath = "";
-  let isAdmin = false;
   let canSeeBeerRatings = false;
 
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("username, avatar_path, is_admin")
+      .select("username, avatar_path")
       .eq("id", user.id)
       .maybeSingle();
 
     username = profile?.username ?? "";
     avatarPath = profile?.avatar_path ?? "";
-    isAdmin = profile?.is_admin ?? false;
     canSeeBeerRatings = canAccessBeerRatings(user.id, user.email);
   }
 
@@ -43,14 +41,18 @@ export default async function Navbar() {
 
   return (
     <header className="border-b border-zinc-800">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
         <Link href="/" className="text-xl font-bold">
           RigDash
         </Link>
 
-        <nav className="flex items-center gap-6 text-sm text-zinc-300">
-          <Link href="/quiz" className="hover:text-white">
-            Quiz
+        <nav className="flex flex-wrap items-center justify-end gap-4 text-sm text-zinc-300 sm:gap-6">
+          <Link href="/tools" className="hover:text-white">
+            Tools
+          </Link>
+
+          <Link href="/tools/firearm-catalog" className="hover:text-white">
+            Firearm Catalog
           </Link>
 
           {canSeeBeerRatings ? (
@@ -59,21 +61,12 @@ export default async function Navbar() {
             </Link>
           ) : null}
 
-          <Link href="/leaderboard" className="hover:text-white">
-            Leaderboard
-          </Link>
-
           {!user ? (
             <Link href="/login" className="hover:text-white">
               Login
             </Link>
           ) : (
-
-            <>{isAdmin && (
-              <Link href="/admin" className="hover:text-white">
-                Admin
-              </Link>
-            )}
+            <>
               <Link href="/profile" className="hover:text-white">
                 Profile
               </Link>

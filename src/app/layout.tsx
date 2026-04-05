@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "RigDash Platform",
-  description: "Tools, quizzes, and leaderboard",
+  description: "Mobile-first gear tools, firearm data, and private beer ratings",
 };
 
 export default function RootLayout({

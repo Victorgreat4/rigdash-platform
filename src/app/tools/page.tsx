@@ -12,12 +12,32 @@ export default function ToolsPage() {
           <h1 className="text-5xl font-bold tracking-tight">Tools</h1>
 
           <p className="max-w-3xl text-lg text-zinc-400">
-            Desktop apps, utilities, downloads, and release pages for the
-            RigDash ecosystem.
+            Mobile-friendly tools for cataloging weapons, cartridges, private
+            ratings, and future RigDash releases.
           </p>
         </section>
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <Link
+            href="/tools/firearm-catalog"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 transition hover:border-zinc-600"
+          >
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs text-zinc-300">
+                Supabase
+              </span>
+              <span className="rounded-full border border-emerald-700 px-3 py-1 text-xs text-emerald-300">
+                Live Schema
+              </span>
+            </div>
+
+            <h2 className="mb-2 text-2xl font-semibold">Firearm Catalog</h2>
+            <p className="text-zinc-400">
+              Browse weapons, cartridges, and compatibility data from the new
+              Supabase-first schema.
+            </p>
+          </Link>
+
           <Link
             href="/tools/rigdash-desktop"
             className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 transition hover:border-zinc-600"

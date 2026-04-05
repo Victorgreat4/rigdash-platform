@@ -187,7 +187,7 @@ export default function ProfileForm({
             setUsername(e.target.value);
             setHasUnsavedChanges(true);
           }}
-          placeholder="Your leaderboard name"
+          placeholder="Your display name"
           className="w-full rounded-lg border border-zinc-700 bg-black px-4 py-3 text-white outline-none"
         />
         <p className="mt-2 text-xs text-zinc-500">

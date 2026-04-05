@@ -1,0 +1,9 @@
+drop table if exists public.leaderboard_entries cascade;
+drop table if exists public.quiz_submissions cascade;
+drop table if exists public.quiz_choices cascade;
+drop table if exists public.quiz_questions cascade;
+drop table if exists public.answers cascade;
+drop table if exists public.submissions cascade;
+drop table if exists public.choices cascade;
+drop table if exists public.questions cascade;
+drop table if exists public.quizzes cascade;

@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RigDash Platform
 
-## Getting Started
+RigDash Platform is a Next.js + TypeScript app with Supabase-backed data for a mobile-first firearm and ammunition catalog, plus a private beer ratings tool.
 
-First, run the development server:
+## Current App Areas
+
+- Firearm catalog
+- Beer ratings
+- Profile and account settings
+- RigDash desktop tool page
+
+## Stack
+
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- Supabase Auth, Storage, and Postgres
+
+## Local Development
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create `.env.local` with:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+3. Start the app:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Supabase Workflow
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This repo uses a Supabase CLI-style structure:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [supabase/config.toml](c:/Users/victo/rigdash-platform/supabase/config.toml)
+- [supabase/migrations/20260405133000_initial_firearms_schema.sql](c:/Users/victo/rigdash-platform/supabase/migrations/20260405133000_initial_firearms_schema.sql)
+- [supabase/migrations/20260405143000_drop_quiz_and_leaderboard_tables.sql](c:/Users/victo/rigdash-platform/supabase/migrations/20260405143000_drop_quiz_and_leaderboard_tables.sql)
+- [supabase/seed.sql](c:/Users/victo/rigdash-platform/supabase/seed.sql)
 
-## Learn More
+The firearms schema includes:
 
-To learn more about Next.js, take a look at the following resources:
+- `countries`
+- `manufacturers`
+- `cartridges`
+- `weapons`
+- `weapon_cartridge_compatibility`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Seed data is included for a small sample catalog.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Important Note
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The cleanup migration that drops old quiz and leaderboard tables has been added to the repo, but it still needs to be applied to the live Supabase database.

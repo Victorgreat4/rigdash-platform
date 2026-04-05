@@ -37,7 +37,7 @@ export default async function ProfilePage() {
         <div>
           <h1 className="mb-4 text-4xl font-bold">Profile Settings</h1>
           <p className="text-zinc-400">
-            Manage your leaderboard identity and account security.
+            Manage your profile details and account security.
           </p>
         </div>
 

@@ -28,8 +28,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <div className="mx-auto max-w-md">
         <h1 className="mb-4 text-4xl font-bold">Login</h1>
         <p className="mb-8 text-zinc-400">
-          Sign in or create an account to save quiz results and appear on the
-          leaderboard.
+          Sign in or create an account to manage your profile and access the
+          platform.
         </p>
 
         {bannerText && (

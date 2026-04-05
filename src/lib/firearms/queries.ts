@@ -84,6 +84,11 @@ export type LearningPathRecord = {
   items: LearningPathItemRecord[];
 };
 
+export type StudyProgressRecord = {
+  id: string;
+  learned_at: string | null;
+};
+
 const CARTRIDGE_SELECT = `
   id,
   name,
@@ -391,4 +396,34 @@ export function getLearningPathItemSummary(
     typeLabel: item.entry_type,
     href: "/paths",
   };
+}
+
+export async function getStudyProgressForCartridge(
+  client: AppSupabaseClient,
+  userId: string,
+  cartridgeId: string
+) {
+  return client
+    .from("study_progress")
+    .select("id, learned_at")
+    .eq("user_id", userId)
+    .eq("entry_type", "cartridge")
+    .eq("cartridge_id", cartridgeId)
+    .maybeSingle()
+    .returns<StudyProgressRecord | null>();
+}
+
+export async function getStudyProgressForWeapon(
+  client: AppSupabaseClient,
+  userId: string,
+  weaponId: string
+) {
+  return client
+    .from("study_progress")
+    .select("id, learned_at")
+    .eq("user_id", userId)
+    .eq("entry_type", "weapon")
+    .eq("weapon_id", weaponId)
+    .maybeSingle()
+    .returns<StudyProgressRecord | null>();
 }

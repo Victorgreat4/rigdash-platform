@@ -1,18 +1,27 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import RecommendedNextSection from "@/components/firearms/RecommendedNextSection";
+import DetailMetaCard from "@/components/firearms/DetailMetaCard";
+import RelatedEntryList from "@/components/firearms/RelatedEntryList";
 import SectionIntro from "@/components/firearms/SectionIntro";
-import SurfaceCard from "@/components/firearms/SurfaceCard";
+import StudyModeSection from "@/components/firearms/StudyModeSection";
 import WhyItMattersSection from "@/components/firearms/WhyItMattersSection";
+import PageHero from "@/components/firearms/PageHero";
+import MarkLearnedButton from "@/components/firearms/MarkLearnedButton";
+import SelfCheckBlock from "@/components/firearms/SelfCheckBlock";
+import StudyModeLink from "@/components/firearms/StudyModeLink";
+import { getSimilarCartridges } from "@/lib/firearms/discovery";
+import { getRecommendedNextForCartridgePage } from "@/lib/firearms/recommendations";
 import {
-  getRecommendedNextForCartridge,
-  getSimilarCartridges,
-} from "@/lib/firearms/discovery";
+  getCartridgeSelfCheckPrompts,
+  getCartridgeStudyFacts,
+  getCartridgeStudySummary,
+} from "@/lib/firearms/study";
 import { createClient } from "@/lib/supabase/server";
 import {
   getCartridgeBySlug,
   getCartridges,
+  getStudyProgressForCartridge,
   getWeapons,
 } from "@/lib/firearms/queries";
 
@@ -20,15 +29,24 @@ type CartridgePageProps = {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<{
+    study?: string;
+  }>;
 };
 
 export default async function CartridgeDetailPage({
   params,
+  searchParams,
 }: CartridgePageProps) {
   noStore();
 
   const { slug } = await params;
+  const query = await searchParams;
+  const studyModeEnabled = query.study === "1";
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const [cartridgeResult, cartridgesResult, weaponsResult] = await Promise.all([
     getCartridgeBySlug(supabase, slug),
     getCartridges(supabase),
@@ -50,75 +68,96 @@ export default async function CartridgeDetailPage({
   );
 
   const similarCartridges = getSimilarCartridges(cartridge, allCartridges);
-  const recommendedNext = getRecommendedNextForCartridge(
+  const recommendedNext = getRecommendedNextForCartridgePage(
     cartridge,
     compatibleWeapons,
-    similarCartridges
+    allCartridges,
+    allWeapons
   );
+  const studyProgressResult = user
+    ? await getStudyProgressForCartridge(supabase, user.id, cartridge.id)
+    : { data: null, error: null };
+  const isLearned = Boolean(studyProgressResult.data?.learned_at);
+  const studyFacts = getCartridgeStudyFacts(cartridge, compatibleWeapons.length);
+  const studySummary = getCartridgeStudySummary(
+    cartridge,
+    compatibleWeapons.length
+  );
+  const selfCheckPrompts = getCartridgeSelfCheckPrompts(cartridge);
+  const studyHref = studyModeEnabled
+    ? `/tools/firearm-catalog/cartridges/${cartridge.slug}`
+    : `/tools/firearm-catalog/cartridges/${cartridge.slug}?study=1`;
+  const quickFacts = [
+    {
+      label: "Manufacturer",
+      value: cartridge.manufacturer?.name ?? "Unknown maker",
+    },
+    {
+      label: "Country",
+      value: cartridge.country?.name ?? "Unknown country",
+    },
+    {
+      label: "Casing",
+      value: cartridge.casing_material ?? "Not listed",
+    },
+    {
+      label: "Linked weapons",
+      value: compatibleWeapons.length,
+    },
+  ];
+  const compatibilityItems = compatibleWeapons.map((weapon) => ({
+    id: weapon.id,
+    title: weapon.name,
+    subtitle: [weapon.weapon_type, weapon.platform, weapon.action_type]
+      .filter(Boolean)
+      .join(" / "),
+    description: weapon.notes,
+    href: `/tools/firearm-catalog/weapons/${weapon.slug}`,
+  }));
+  const similarItems = similarCartridges.map((item) => ({
+    id: item.id,
+    title: item.name,
+    subtitle: `${item.caliber} / ${item.cartridge_type}`,
+    href: `/tools/firearm-catalog/cartridges/${item.slug}`,
+  }));
 
   return (
     <main className="min-h-screen bg-black px-6 py-14 text-white sm:py-16">
       <div className="mx-auto max-w-6xl space-y-10">
         <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="space-y-4">
-            <Link
-              href="/tools/firearm-catalog"
-              className="inline-flex rounded-full border border-zinc-700 px-3 py-1 text-sm text-zinc-300 transition hover:border-zinc-500"
-            >
-              Back to firearm catalog
-            </Link>
+          <PageHero
+            backHref="/tools/firearm-catalog"
+            backLabel="Back to firearm catalog"
+            eyebrow="Cartridge entry"
+            title={cartridge.name}
+            subtitle={`${cartridge.caliber} / ${cartridge.cartridge_type}`}
+            description="Use this page to understand the round itself, trace its compatibility links, compare nearby cartridges, and switch into study mode when you want a simpler review flow."
+            actions={<StudyModeLink href={studyHref} enabled={studyModeEnabled} />}
+          />
 
-            <div className="space-y-3">
-              <div className="text-xs font-medium uppercase tracking-[0.16em] text-zinc-500">
-                Cartridge detail
-              </div>
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-                {cartridge.name}
-              </h1>
-              <p className="text-base leading-7 text-zinc-400 sm:text-lg">
-                {cartridge.caliber} / {cartridge.cartridge_type}
-              </p>
-            </div>
-          </div>
-
-          <SurfaceCard className="space-y-4">
-            <div className="text-sm text-zinc-500">Quick context</div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
-                  Manufacturer
-                </div>
-                <div className="mt-1 text-sm text-zinc-200">
-                  {cartridge.manufacturer?.name ?? "Unknown maker"}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
-                  Country
-                </div>
-                <div className="mt-1 text-sm text-zinc-200">
-                  {cartridge.country?.name ?? "Unknown country"}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
-                  Casing
-                </div>
-                <div className="mt-1 text-sm text-zinc-200">
-                  {cartridge.casing_material ?? "Not listed"}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
-                  Compatible weapons
-                </div>
-                <div className="mt-1 text-sm text-zinc-200">
-                  {compatibleWeapons.length}
-                </div>
-              </div>
-            </div>
-          </SurfaceCard>
+          <DetailMetaCard
+            heading={studyModeEnabled ? "Study summary" : "Quick context"}
+            items={quickFacts}
+            action={
+              studyModeEnabled ? (
+              <MarkLearnedButton
+                entryType="cartridge"
+                cartridgeId={cartridge.id}
+                initialLearned={isLearned}
+                isLoggedIn={Boolean(user)}
+              />
+              ) : null
+            }
+          />
         </section>
+
+        {studyModeEnabled ? (
+          <StudyModeSection
+            description="Study mode highlights the key facts first, gives a calmer summary, and adds a short self-check without turning the page into a full flashcard system."
+            facts={studyFacts}
+            summary={studySummary}
+          />
+        ) : null}
 
         <WhyItMattersSection
           title={`${cartridge.name} matters because cartridges shape the rest of the discovery journey.`}
@@ -136,77 +175,39 @@ export default async function CartridgeDetailPage({
         <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-5">
             <SectionIntro
-              title="Compatible weapons"
-              description="Follow these connections to see how this cartridge shows up in specific platforms and roles."
+              eyebrow="Compatibility"
+              title="Follow the compatibility link"
+              description="Start here when you want to see how this cartridge shows up in specific platforms and why that relationship matters."
             />
 
-            <div className="grid gap-4">
-              {compatibleWeapons.length > 0 ? (
-                compatibleWeapons.map((weapon) => (
-                  <SurfaceCard key={weapon.id} className="space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <h3 className="text-xl font-semibold text-white">
-                          {weapon.name}
-                        </h3>
-                        <p className="mt-1 text-sm text-zinc-400">
-                          {[weapon.weapon_type, weapon.platform, weapon.action_type]
-                            .filter(Boolean)
-                            .join(" / ")}
-                        </p>
-                      </div>
-
-                      <Link
-                        href={`/tools/firearm-catalog/weapons/${weapon.slug}`}
-                        className="rounded-full border border-zinc-700 px-4 py-2 text-sm text-zinc-200 transition hover:border-zinc-500 hover:text-white"
-                      >
-                        View weapon
-                      </Link>
-                    </div>
-
-                    {weapon.notes ? (
-                      <p className="text-sm leading-6 text-zinc-400">{weapon.notes}</p>
-                    ) : null}
-                  </SurfaceCard>
-                ))
-              ) : (
-                <SurfaceCard>
-                  <p className="text-sm leading-6 text-zinc-400">
-                    No compatible weapons are listed yet for this cartridge.
-                  </p>
-                </SurfaceCard>
-              )}
-            </div>
+            <RelatedEntryList
+              items={compatibilityItems}
+              emptyMessage="No compatible weapons are listed yet for this cartridge."
+              buttonLabel="View weapon"
+            />
           </div>
 
           <div className="space-y-5">
             <SectionIntro
-              title="Related or similar entries"
-              description="Use related cartridges to build comparison habits and understand families of similar rounds."
+              eyebrow="Compare next"
+              title="Compare a related cartridge"
+              description="Use nearby cartridges to build comparison habits and understand families of similar rounds."
             />
 
-            <div className="grid gap-4">
-              {similarCartridges.map((item) => (
-                <SurfaceCard key={item.id} className="space-y-3">
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">{item.name}</h3>
-                    <p className="mt-1 text-sm text-zinc-400">
-                      {item.caliber} / {item.cartridge_type}
-                    </p>
-                  </div>
-                  <Link
-                    href={`/tools/firearm-catalog/cartridges/${item.slug}`}
-                    className="inline-flex rounded-full border border-zinc-700 px-4 py-2 text-sm text-zinc-200 transition hover:border-zinc-500 hover:text-white"
-                  >
-                    Compare this cartridge
-                  </Link>
-                </SurfaceCard>
-              ))}
-            </div>
+            <RelatedEntryList
+              items={similarItems}
+              emptyMessage="No related cartridges are listed yet for comparison."
+              buttonLabel="Compare this cartridge"
+            />
           </div>
         </section>
 
-        <RecommendedNextSection items={recommendedNext} />
+        {studyModeEnabled ? <SelfCheckBlock prompts={selfCheckPrompts} /> : null}
+
+        <RecommendedNextSection
+          title="Keep learning from this cartridge"
+          items={recommendedNext}
+        />
       </div>
     </main>
   );

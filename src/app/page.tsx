@@ -1,18 +1,26 @@
-import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { canAccessBeerRatings } from "@/lib/beerRatingsAccess";
 import DiscoveryLinkCard from "@/components/firearms/DiscoveryLinkCard";
 import FeaturedItemCard from "@/components/firearms/FeaturedItemCard";
+import LearningPathCard from "@/components/firearms/LearningPathCard";
 import RecommendedNextSection from "@/components/firearms/RecommendedNextSection";
 import SectionIntro from "@/components/firearms/SectionIntro";
-import LearningPathCard from "@/components/firearms/LearningPathCard";
+import HomeComparisonCard from "@/components/home/HomeComparisonCard";
+import HomeContinueCard from "@/components/home/HomeContinueCard";
+import HomeHero from "@/components/home/HomeHero";
+import HomeHighlightedEntryCard from "@/components/home/HomeHighlightedEntryCard";
 import {
   beginnerStartSections,
   getFeaturedCartridges,
   getFeaturedLearningPaths,
   getFeaturedWeapons,
 } from "@/lib/firearms/discovery";
+import {
+  getContinueLearningLinks,
+  getHomepageComparisons,
+  getRecentHighlightedEntries,
+} from "@/lib/firearms/homepage";
 import {
   getCartridges,
   getLearningPaths,
@@ -31,19 +39,28 @@ export default async function Home() {
     ? canAccessBeerRatings(user.id, user.email)
     : false;
 
-  const [cartridgesResult, weaponsResult, learningPathsResult] = await Promise.all([
-    getCartridges(supabase),
-    getWeapons(supabase),
-    getLearningPaths(supabase),
-  ]);
+  const [cartridgesResult, weaponsResult, learningPathsResult] =
+    await Promise.all([
+      getCartridges(supabase),
+      getWeapons(supabase),
+      getLearningPaths(supabase),
+    ]);
 
   const cartridges = cartridgesResult.data ?? [];
   const weapons = weaponsResult.data ?? [];
+  const learningPaths = learningPathsResult.data ?? [];
+
   const featuredCartridges = getFeaturedCartridges(cartridges);
   const featuredWeapons = getFeaturedWeapons(weapons);
-  const featuredLearningPaths = getFeaturedLearningPaths(
-    learningPathsResult.data ?? []
+  const featuredLearningPaths = getFeaturedLearningPaths(learningPaths);
+  const suggestedComparisons = getHomepageComparisons(cartridges, weapons);
+  const highlightedEntries = getRecentHighlightedEntries(cartridges, weapons);
+  const continueLearningLinks = getContinueLearningLinks(
+    learningPaths,
+    cartridges,
+    weapons
   );
+
   const hasSchemaIssue =
     Boolean(cartridgesResult.error) ||
     Boolean(weaponsResult.error) ||
@@ -52,90 +69,23 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-black px-6 py-14 text-white sm:py-16">
       <div className="mx-auto max-w-6xl space-y-14">
-        <section className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
-          <div className="space-y-5">
-            <div className="inline-flex rounded-full border border-zinc-700 px-3 py-1 text-sm text-zinc-300">
-              Educational discovery platform
-            </div>
-
-            <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Learn ammunition and firearms through relationships, not random
-              lists.
-            </h1>
-
-            <p className="max-w-3xl text-base leading-7 text-zinc-400 sm:text-lg">
-              RigDash now guides people from cartridge basics into compatible
-              weapons, similar entries, and clear next steps. It is built to
-              feel calm for beginners, but still structured enough for deeper
-              exploration.
-            </p>
-
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="/tools/firearm-catalog"
-                className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-zinc-200"
-              >
-                Start learning
-              </Link>
-
-              <Link
-                href="/tools/rigdash-desktop"
-                className="rounded-full border border-zinc-700 px-5 py-3 text-sm text-zinc-100 transition hover:border-zinc-500"
-              >
-                RigDash Desktop
-              </Link>
-
-              {canSeeBeerRatings ? (
-                <Link
-                  href="/tools/beer-ratings"
-                  className="rounded-full border border-zinc-700 px-5 py-3 text-sm text-zinc-100 transition hover:border-zinc-500"
-                >
-                  Dad&apos;s Beer Ratings
-                </Link>
-              ) : null}
-            </div>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
-              <div className="text-sm text-zinc-500">Featured cartridges</div>
-              <div className="mt-2 text-3xl font-semibold">
-                {featuredCartridges.length}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
-              <div className="text-sm text-zinc-500">Featured weapons</div>
-              <div className="mt-2 text-3xl font-semibold">
-                {featuredWeapons.length}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
-              <div className="text-sm text-zinc-500">Learning mode</div>
-              <div className="mt-2 text-sm leading-6 text-zinc-300">
-                Start simple, then follow recommended next links through the
-                catalog.
-              </div>
-            </div>
-          </div>
-        </section>
+        <HomeHero canSeeBeerRatings={canSeeBeerRatings} />
 
         {hasSchemaIssue ? (
           <section className="rounded-2xl border border-amber-800 bg-amber-950/40 p-5 text-amber-100">
             <h2 className="text-lg font-semibold">Catalog data is unavailable</h2>
             <p className="mt-2 text-sm text-amber-200">
-              The educational catalog is wired up, but the firearm pages need
-              the Supabase schema available before featured entries can load.
+              The homepage structure is ready, but featured entries and learning
+              content need the Supabase schema available before they can load.
             </p>
           </section>
         ) : null}
 
         <section className="space-y-5">
           <SectionIntro
-            eyebrow="Start here"
-            title="A beginner-friendly first look"
-            description="If you are not sure what to study first, start with a cartridge, move to a compatible weapon, then compare a related entry. Each step is designed to reveal the next useful thing to look at."
+            eyebrow="Start here for beginners"
+            title="Three simple starting points"
+            description="If this is your first visit, these routes give you an easy way in: start with a cartridge, move into a compatible weapon, then let the site guide the next comparison."
           />
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -152,11 +102,25 @@ export default async function Home() {
           </div>
         </section>
 
+        <section className="space-y-5">
+          <SectionIntro
+            eyebrow="Continue learning"
+            title="For returning learners"
+            description="These links are designed for people who already know the basics and want a quick way back into study mode, a learning path, or a useful comparison."
+          />
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {continueLearningLinks.map((item) => (
+              <HomeContinueCard key={item.title} item={item} />
+            ))}
+          </div>
+        </section>
+
         <section id="featured-cartridges" className="space-y-5">
           <SectionIntro
             eyebrow="Featured cartridges"
-            title="Start with the round, then follow where it leads"
-            description="Featured cartridges make a good entry point because they quickly explain caliber, cartridge type, and how those choices affect compatible weapon platforms."
+            title="Start with the round"
+            description="Cartridge pages are a strong first stop because they build vocabulary fast and naturally connect into weapon pages."
           />
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -182,8 +146,8 @@ export default async function Home() {
         <section id="featured-weapons" className="space-y-5">
           <SectionIntro
             eyebrow="Featured weapons"
-            title="See how platforms connect back to ammunition choices"
-            description="Featured weapons help learners understand how platform, action type, and compatibility shape what each entry is useful for."
+            title="Then move into platforms"
+            description="Weapon pages help users translate names and specs into clearer ideas about role, compatibility, and platform families."
           />
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -210,9 +174,9 @@ export default async function Home() {
 
         <section id="learning-paths" className="space-y-5">
           <SectionIntro
-            eyebrow="Recommended learning paths"
-            title="Follow a path instead of guessing"
-            description="These Supabase-backed paths guide users step by step and keep the structure ready for saved progress, completion tracking, mini quizzes, and later admin workflows."
+            eyebrow="Learning paths preview"
+            title="Follow a guided path when you do not want to guess"
+            description="Paths preview the guided side of the platform. They work especially well for beginners, but also help returning users pick up a topic in the right order."
           />
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -222,36 +186,67 @@ export default async function Home() {
           </div>
         </section>
 
+        <section className="space-y-5">
+          <SectionIntro
+            eyebrow="Suggested comparisons"
+            title="Useful side-by-side comparisons"
+            description="Comparison prompts keep the homepage from feeling static. They give users a natural next move instead of leaving them at a dead end."
+          />
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {suggestedComparisons.map((comparison) => (
+              <HomeComparisonCard
+                key={comparison.title}
+                comparison={comparison}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-5">
+          <SectionIntro
+            eyebrow="Recent or highlighted entries"
+            title="Good places to jump back in"
+            description="This section helps the homepage feel alive even without complex visuals. It gives new visitors something concrete to open and returning users something fresh to continue with."
+          />
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {highlightedEntries.map((entry) => (
+              <HomeHighlightedEntryCard key={entry.href} entry={entry} />
+            ))}
+          </div>
+        </section>
+
         <RecommendedNextSection
-          title="Where to go next"
-          description="The platform should always suggest the next useful move. These links keep RigDash Desktop and Dad&apos;s Beer Ratings intact while the learning catalog grows."
+          title="What to do next"
+          description="The homepage should always end with obvious next moves. These links keep the study platform, RigDash Desktop, and Dad&apos;s Beer Ratings all intact."
           items={[
             {
-              eyebrow: "Primary learning hub",
+              eyebrow: "Open exploration",
               title: "Browse the firearm catalog",
               description:
-                "Open the educational catalog hub to compare featured entries, browse by type, and move into detail pages.",
+                "Use the encyclopedia view when you want to explore entries freely and let recommendations guide the next page.",
               href: "/tools/firearm-catalog",
             },
             {
-              eyebrow: "Always intact",
-              title: "Explore learning paths",
+              eyebrow: "Guided learning",
+              title: "Open all learning paths",
               description:
-                "Use guided sequences instead of raw browsing when you want the platform to tell you what to study next.",
+                "Choose a path when you want the platform to handle the study order for you.",
               href: "/paths",
             },
             {
               eyebrow: "Always intact",
               title: "Visit RigDash Desktop",
               description:
-                "Keep the platform side of the project visible with the existing RigDash download and release page.",
+                "Keep the existing RigDash desktop page visible as part of the broader platform.",
               href: "/tools/rigdash-desktop",
             },
             {
               eyebrow: "Always intact",
               title: "Open Dad&apos;s Beer Ratings",
               description:
-                "The private beer ratings experience stays untouched and available as part of the broader platform.",
+                "The private beer ratings tool remains available without changing its role in the app.",
               href: canSeeBeerRatings ? "/tools/beer-ratings" : "/login",
             },
           ]}

@@ -210,6 +210,87 @@ export type Database = {
         };
         Relationships: [];
       };
+      profiles: {
+        Row: {
+          avatar_path: string | null;
+          id: string;
+          username: string;
+        };
+        Insert: {
+          avatar_path?: string | null;
+          id: string;
+          username: string;
+        };
+        Update: {
+          avatar_path?: string | null;
+          id?: string;
+          username?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey";
+            columns: ["id"];
+            isOneToOne: true;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      study_progress: {
+        Row: {
+          cartridge_id: string | null;
+          created_at: string;
+          entry_type: string;
+          id: string;
+          learned_at: string | null;
+          updated_at: string;
+          user_id: string;
+          weapon_id: string | null;
+        };
+        Insert: {
+          cartridge_id?: string | null;
+          created_at?: string;
+          entry_type: string;
+          id?: string;
+          learned_at?: string | null;
+          updated_at?: string;
+          user_id: string;
+          weapon_id?: string | null;
+        };
+        Update: {
+          cartridge_id?: string | null;
+          created_at?: string;
+          entry_type?: string;
+          id?: string;
+          learned_at?: string | null;
+          updated_at?: string;
+          user_id?: string;
+          weapon_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "study_progress_cartridge_id_fkey";
+            columns: ["cartridge_id"];
+            isOneToOne: false;
+            referencedRelation: "cartridges";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "study_progress_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "study_progress_weapon_id_fkey";
+            columns: ["weapon_id"];
+            isOneToOne: false;
+            referencedRelation: "weapons";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       weapons: {
         Row: {
           action_type: string | null;

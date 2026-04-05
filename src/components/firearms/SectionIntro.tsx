@@ -23,7 +23,7 @@ export default function SectionIntro({
         </div>
       ) : null}
 
-      <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
         {title}
       </h2>
 

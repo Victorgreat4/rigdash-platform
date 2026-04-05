@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import LearningPathSequence from "@/components/firearms/LearningPathSequence";
+import PageHero from "@/components/firearms/PageHero";
 import RecommendedNextSection from "@/components/firearms/RecommendedNextSection";
 import SectionIntro from "@/components/firearms/SectionIntro";
 import SurfaceCard from "@/components/firearms/SurfaceCard";
@@ -66,31 +67,21 @@ export default async function PathDetailPage({
     currentIndex < sortedItems.length - 1
       ? getLearningPathItemSummary(sortedItems[currentIndex + 1])
       : null;
+  const currentStudyHref = currentSummary.href.includes("?")
+    ? `${currentSummary.href}&study=1`
+    : `${currentSummary.href}?study=1`;
 
   return (
     <main className="min-h-screen bg-black px-6 py-14 text-white sm:py-16">
       <div className="mx-auto max-w-6xl space-y-10">
         <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="space-y-4">
-            <Link
-              href="/paths"
-              className="inline-flex rounded-full border border-zinc-700 px-3 py-1 text-sm text-zinc-300 transition hover:border-zinc-500"
-            >
-              Back to all paths
-            </Link>
-
-            <div className="space-y-3">
-              <div className="text-xs font-medium uppercase tracking-[0.16em] text-zinc-500">
-                Guided learning path
-              </div>
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-                {path.title}
-              </h1>
-              <p className="max-w-3xl text-base leading-7 text-zinc-400 sm:text-lg">
-                {path.description}
-              </p>
-            </div>
-          </div>
+          <PageHero
+            backHref="/paths"
+            backLabel="Back to all paths"
+            eyebrow="Guided learning path"
+            title={path.title}
+            description={path.description}
+          />
 
           <SurfaceCard className="space-y-4">
             <div className="text-sm text-zinc-500">Path overview</div>
@@ -126,8 +117,9 @@ export default async function PathDetailPage({
         <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="space-y-5">
             <SectionIntro
-              title="Full sequence"
-              description="The sequence keeps current, previous, and next items obvious so the path feels guided rather than overwhelming."
+              eyebrow="Path sequence"
+              title="See the full sequence"
+              description="The sequence keeps previous, current, and next items obvious so the path feels guided instead of overwhelming."
             />
 
             <LearningPathSequence
@@ -139,8 +131,9 @@ export default async function PathDetailPage({
 
           <div className="space-y-5">
             <SectionIntro
+              eyebrow="Current focus"
               title={`Current step: ${currentSummary.name}`}
-              description="Use the current step card for context, then move forward one item at a time. The structure is intentionally simple so saved progress and completion tracking can slot in later."
+              description="Use the current step card for context, then move forward one item at a time. This structure is intentionally simple so progress tracking can slot in later."
             />
 
             <SurfaceCard className="space-y-4">
@@ -165,12 +158,20 @@ export default async function PathDetailPage({
                 </p>
               </div>
 
-              <Link
-                href={currentSummary.href}
-                className="inline-flex rounded-full bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-zinc-200"
-              >
-                Open encyclopedia entry
-              </Link>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href={currentSummary.href}
+                  className="inline-flex rounded-full bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-zinc-200"
+                >
+                  Open encyclopedia entry
+                </Link>
+                <Link
+                  href={currentStudyHref}
+                  className="inline-flex rounded-full border border-zinc-700 px-5 py-3 text-sm text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+                >
+                  Open in study mode
+                </Link>
+              </div>
             </SurfaceCard>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -222,13 +223,14 @@ export default async function PathDetailPage({
         </section>
 
         <RecommendedNextSection
+          title="Keep moving through the path"
           items={[
             {
               eyebrow: "Stay on path",
-              title: "Open the current encyclopedia entry",
+              title: "Open the current entry in study mode",
               description:
-                "Read the current cartridge or weapon detail page, then come back to continue the guided sequence.",
-              href: currentSummary.href,
+                "Use study mode when you want a calmer recap before returning to the guided sequence.",
+              href: currentStudyHref,
             },
             ...(nextItem
               ? [

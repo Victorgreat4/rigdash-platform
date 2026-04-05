@@ -6,6 +6,7 @@ import RecommendedNextSection from "@/components/firearms/RecommendedNextSection
 import SectionIntro from "@/components/firearms/SectionIntro";
 import SurfaceCard from "@/components/firearms/SurfaceCard";
 import LearningPathCard from "@/components/firearms/LearningPathCard";
+import PageHero from "@/components/firearms/PageHero";
 import {
   beginnerStartSections,
   getFeaturedCartridges,
@@ -43,22 +44,11 @@ export default async function FirearmCatalogPage() {
   return (
     <main className="min-h-screen bg-black px-6 py-14 text-white sm:py-16">
       <div className="mx-auto max-w-6xl space-y-12">
-        <section className="space-y-5">
-          <div className="inline-flex rounded-full border border-zinc-700 px-3 py-1 text-sm text-zinc-300">
-            Firearm + ammunition learning hub
-          </div>
-
-          <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl">
-            Learn by following the links between cartridges, weapons, and use
-            cases.
-          </h1>
-
-          <p className="max-w-3xl text-base leading-7 text-zinc-400 sm:text-lg">
-            This is the discovery-first catalog. Instead of browsing rows, you
-            can start with what matters, compare compatible entries, and follow
-            recommended next steps that keep the learning flow moving.
-          </p>
-        </section>
+        <PageHero
+          eyebrow="Firearm + ammunition learning hub"
+          title="Learn by following the links between cartridges, weapons, and use cases."
+          description="This catalog is designed for guided exploration. Start with a round, move into a compatible platform, compare a related entry, and use the recommended next cards to keep going."
+        />
 
         <section className="grid gap-4 sm:grid-cols-3">
           <SurfaceCard>
@@ -88,23 +78,32 @@ export default async function FirearmCatalogPage() {
           </section>
         ) : null}
 
-        <section className="grid gap-4 md:grid-cols-3">
-          {beginnerStartSections.map((section) => (
-            <DiscoveryLinkCard
-              key={section.title}
-              eyebrow="Start here"
-              title={section.title}
-              description={section.description}
-              href={section.href}
-              cta="Open section"
-            />
-          ))}
+        <section className="space-y-5">
+          <SectionIntro
+            eyebrow="Start here"
+            title="Begin with one clear route"
+            description="These starting points make the catalog feel less like a list and more like a guided learning space."
+          />
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {beginnerStartSections.map((section) => (
+              <DiscoveryLinkCard
+                key={section.title}
+                eyebrow="Start here"
+                title={section.title}
+                description={section.description}
+                href={section.href}
+                cta="Open section"
+              />
+            ))}
+          </div>
         </section>
 
         <section id="featured-cartridges" className="space-y-5">
           <SectionIntro
+            eyebrow="Featured cartridges"
             title="Featured cartridges"
-            description="Cartridges are a strong starting point because they quickly teach terminology and create obvious paths into compatible weapon pages."
+            description="Cartridge pages are often the clearest first step because they build vocabulary quickly and open direct paths into compatible weapons."
           />
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -129,8 +128,9 @@ export default async function FirearmCatalogPage() {
 
         <section id="featured-weapons" className="space-y-5">
           <SectionIntro
+            eyebrow="Featured weapons"
             title="Featured weapons"
-            description="Weapon pages connect platform choices back to ammunition, role, and neighboring entries for guided comparison."
+            description="Weapon pages help users connect platform choices back to ammunition, role, and nearby entries worth comparing next."
           />
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -157,9 +157,10 @@ export default async function FirearmCatalogPage() {
 
         <section className="space-y-5">
           <SectionIntro
+            eyebrow="Guided paths"
             id="learning-paths"
-            title="Recommended learning paths"
-            description="Learning paths turn the catalog into a guided experience. The same structure can grow later into saved progress, completion tracking, mini quizzes, and future admin tooling."
+            title="Learning paths"
+            description="Paths turn the catalog into a step-by-step study experience and tie together encyclopedia reading, study mode, and next-step guidance."
           />
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -170,12 +171,13 @@ export default async function FirearmCatalogPage() {
         </section>
 
         <RecommendedNextSection
+          title="Keep exploring"
           items={[
             {
               eyebrow: "Detail exploration",
               title: "Open a cartridge page",
               description:
-                "Cartridge detail pages lead naturally into compatible weapons and neighboring rounds.",
+                "Cartridge pages lead naturally into linked weapons and neighboring rounds.",
               href: featuredCartridges[0]
                 ? `/tools/firearm-catalog/cartridges/${featuredCartridges[0].slug}`
                 : "/tools/firearm-catalog",
@@ -184,7 +186,7 @@ export default async function FirearmCatalogPage() {
               eyebrow: "Platform exploration",
               title: "Open a weapon page",
               description:
-                "Weapon detail pages explain role, compatibility, and the next useful comparison to make.",
+                "Weapon pages explain role, compatibility, and the next useful comparison to make.",
               href: featuredWeapons[0]
                 ? `/tools/firearm-catalog/weapons/${featuredWeapons[0].slug}`
                 : "/tools/firearm-catalog",

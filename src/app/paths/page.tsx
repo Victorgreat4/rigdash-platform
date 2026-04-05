@@ -1,5 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import LearningPathCard from "@/components/firearms/LearningPathCard";
+import PageHero from "@/components/firearms/PageHero";
 import RecommendedNextSection from "@/components/firearms/RecommendedNextSection";
 import SectionIntro from "@/components/firearms/SectionIntro";
 import { createClient } from "@/lib/supabase/server";
@@ -15,22 +16,11 @@ export default async function PathsPage() {
   return (
     <main className="min-h-screen bg-black px-6 py-14 text-white sm:py-16">
       <div className="mx-auto max-w-6xl space-y-10">
-        <section className="space-y-5">
-          <div className="inline-flex rounded-full border border-zinc-700 px-3 py-1 text-sm text-zinc-300">
-            Learning paths
-          </div>
-
-          <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl">
-            Guided paths for learning one step at a time
-          </h1>
-
-          <p className="max-w-3xl text-base leading-7 text-zinc-400 sm:text-lg">
-            Choose a path when you want the platform to guide the order of
-            study. Each path supports both cartridge and weapon entries and is
-            structured to expand later into saved progress, completion
-            tracking, and mini quizzes.
-          </p>
-        </section>
+        <PageHero
+          eyebrow="Guided paths"
+          title="Follow a path when you want the platform to choose the next step."
+          description="Learning paths keep the encyclopedia, study mode, and next-step guidance tied together. They work well for beginners, but also help returning users continue in a clear order."
+        />
 
         {learningPathsResult.error ? (
           <section className="rounded-2xl border border-amber-800 bg-amber-950/40 p-5 text-amber-100">
@@ -44,8 +34,9 @@ export default async function PathsPage() {
 
         <section className="space-y-5">
           <SectionIntro
-            title="Available paths"
-            description="Pick a guided route based on your current goal. Each path keeps the sequence readable on mobile and obvious on desktop."
+            eyebrow="Choose a path"
+            title="Available learning paths"
+            description="Pick a guided route based on your current goal. Each path stays readable on mobile and obvious on desktop."
           />
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -56,6 +47,7 @@ export default async function PathsPage() {
         </section>
 
         <RecommendedNextSection
+          title="Keep exploring"
           items={[
             {
               eyebrow: "Keep exploring",

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { canAccessBeerRatings } from "@/lib/beerRatingsAccess";
 import SignOutButton from "./SignOutButton";
 
 export default async function Navbar() {
@@ -15,6 +16,7 @@ export default async function Navbar() {
   let username = "";
   let avatarPath = "";
   let isAdmin = false;
+  let canSeeBeerRatings = false;
 
   if (user) {
     const { data: profile } = await supabase
@@ -26,6 +28,7 @@ export default async function Navbar() {
     username = profile?.username ?? "";
     avatarPath = profile?.avatar_path ?? "";
     isAdmin = profile?.is_admin ?? false;
+    canSeeBeerRatings = canAccessBeerRatings(user.id, user.email);
   }
 
   let avatarUrl = "";
@@ -49,6 +52,12 @@ export default async function Navbar() {
           <Link href="/quiz" className="hover:text-white">
             Quiz
           </Link>
+
+          {canSeeBeerRatings ? (
+            <Link href="/tools/beer-ratings" className="hover:text-white">
+              Beer Ratings
+            </Link>
+          ) : null}
 
           <Link href="/leaderboard" className="hover:text-white">
             Leaderboard

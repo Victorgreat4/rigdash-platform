@@ -37,6 +37,26 @@ export default function ToolsPage() {
               utilities, and future release downloads.
             </p>
           </Link>
+
+          <Link
+            href="/tools/beer-ratings"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 transition hover:border-zinc-600"
+          >
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs text-zinc-300">
+                Private
+              </span>
+              <span className="rounded-full border border-emerald-700 px-3 py-1 text-xs text-emerald-300">
+                Live
+              </span>
+            </div>
+
+            <h2 className="mb-2 text-2xl font-semibold">Dad&apos;s Beer Ratings</h2>
+            <p className="text-zinc-400">
+              Search through personal beer reviews, tasting notes, and top 15
+              rated beers.
+            </p>
+          </Link>
         </section>
       </div>
     </main>

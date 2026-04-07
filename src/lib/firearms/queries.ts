@@ -17,6 +17,19 @@ export type LinkedManufacturer = {
   website?: string | null;
 };
 
+export type AmmoVariantRecord = {
+  id: string;
+  cartridge_id: string;
+  name: string;
+  slug: string;
+  variant_type: string;
+  source_game: string;
+  relative_penetration: string | null;
+  relative_damage: string | null;
+  notes: string | null;
+  created_at: string;
+};
+
 export type CartridgeRecord = {
   id: string;
   name: string;
@@ -28,6 +41,7 @@ export type CartridgeRecord = {
   created_at: string;
   manufacturer: LinkedManufacturer | null;
   country: LinkedCountry | null;
+  ammo_variants: AmmoVariantRecord[];
 };
 
 export type CompatibilityRecord = {
@@ -109,6 +123,18 @@ const CARTRIDGE_SELECT = `
     name,
     slug,
     iso_alpha2
+  ),
+  ammo_variants:ammo_variants (
+    id,
+    cartridge_id,
+    name,
+    slug,
+    variant_type,
+    source_game,
+    relative_penetration,
+    relative_damage,
+    notes,
+    created_at
   )
 `;
 

@@ -31,6 +31,10 @@ export default async function FirearmCatalogPage() {
 
   const weapons = weaponsResult.data ?? [];
   const cartridges = cartridgesResult.data ?? [];
+  const ammoVariantCount = cartridges.reduce(
+    (total, cartridge) => total + cartridge.ammo_variants.length,
+    0
+  );
   const featuredWeapons = getFeaturedWeapons(weapons);
   const featuredCartridges = getFeaturedCartridges(cartridges);
   const featuredLearningPaths = getFeaturedLearningPaths(
@@ -60,11 +64,8 @@ export default async function FirearmCatalogPage() {
             <div className="mt-2 text-3xl font-semibold">{cartridges.length}</div>
           </SurfaceCard>
           <SurfaceCard>
-            <div className="text-sm text-zinc-500">Learning model</div>
-            <div className="mt-2 text-sm leading-6 text-zinc-300">
-              Why it matters, related items, and recommended next on every key
-              page.
-            </div>
+            <div className="text-sm text-zinc-500">Named ammo variants</div>
+            <div className="mt-2 text-3xl font-semibold">{ammoVariantCount}</div>
           </SurfaceCard>
         </section>
 

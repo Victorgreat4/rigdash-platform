@@ -104,6 +104,10 @@ export default async function CartridgeDetailPage({
       label: "Linked weapons",
       value: compatibleWeapons.length,
     },
+    {
+      label: "Named loads",
+      value: cartridge.ammo_variants.length,
+    },
   ];
   const compatibilityItems = compatibleWeapons.map((weapon) => ({
     id: weapon.id,
@@ -119,6 +123,20 @@ export default async function CartridgeDetailPage({
     title: item.name,
     subtitle: `${item.caliber} / ${item.cartridge_type}`,
     href: `/tools/firearm-catalog/cartridges/${item.slug}`,
+  }));
+  const ammoVariantItems = cartridge.ammo_variants.map((variant) => ({
+    id: variant.id,
+    title: variant.name,
+    subtitle: [
+      variant.variant_type,
+      variant.relative_penetration
+        ? `Pen: ${variant.relative_penetration}`
+        : null,
+      variant.relative_damage ? `Dmg: ${variant.relative_damage}` : null,
+    ]
+      .filter(Boolean)
+      .join(" / "),
+    description: `${variant.source_game}${variant.notes ? ` · ${variant.notes}` : ""}`,
   }));
 
   return (
@@ -171,6 +189,20 @@ export default async function CartridgeDetailPage({
             "It creates an easy path into related rounds for side-by-side comparison.",
           ]}
         />
+
+        <section className="space-y-5">
+          <SectionIntro
+            eyebrow="Named loads"
+            title="Notable ammo variants"
+            description="Use these named loads to connect a cartridge family to the specific round names players actually recognize from extraction shooters."
+          />
+
+          <RelatedEntryList
+            items={ammoVariantItems}
+            emptyMessage="No named ammo variants are listed yet for this cartridge."
+            buttonLabel="Open entry"
+          />
+        </section>
 
         <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-5">

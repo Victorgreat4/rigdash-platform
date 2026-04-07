@@ -122,6 +122,53 @@ export type Database = {
           }
         ];
       };
+      ammo_variants: {
+        Row: {
+          cartridge_id: string;
+          created_at: string;
+          id: string;
+          name: string;
+          notes: string | null;
+          relative_damage: string | null;
+          relative_penetration: string | null;
+          slug: string;
+          source_game: string;
+          variant_type: string;
+        };
+        Insert: {
+          cartridge_id: string;
+          created_at?: string;
+          id?: string;
+          name: string;
+          notes?: string | null;
+          relative_damage?: string | null;
+          relative_penetration?: string | null;
+          slug: string;
+          source_game: string;
+          variant_type: string;
+        };
+        Update: {
+          cartridge_id?: string;
+          created_at?: string;
+          id?: string;
+          name?: string;
+          notes?: string | null;
+          relative_damage?: string | null;
+          relative_penetration?: string | null;
+          slug?: string;
+          source_game?: string;
+          variant_type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ammo_variants_cartridge_id_fkey";
+            columns: ["cartridge_id"];
+            isOneToOne: false;
+            referencedRelation: "cartridges";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       learning_path_items: {
         Row: {
           cartridge_id: string | null;

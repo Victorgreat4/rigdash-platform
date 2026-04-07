@@ -23,6 +23,7 @@ export function getCartridgeStudyFacts(
     { label: "Caliber", value: cartridge.caliber },
     { label: "Cartridge type", value: cartridge.cartridge_type },
     { label: "Casing", value: cartridge.casing_material ?? "Not listed" },
+    { label: "Named loads", value: String(cartridge.ammo_variants.length) },
     { label: "Compatible weapons", value: String(compatibleWeaponCount) },
   ];
 }
@@ -45,7 +46,7 @@ export function getCartridgeStudySummary(
 ): StudySummary {
   return {
     title: "Simplified summary",
-    description: `${cartridge.name} is a ${cartridge.cartridge_type} cartridge in ${cartridge.caliber}. In this encyclopedia it connects to ${compatibleWeaponCount} compatible weapon${compatibleWeaponCount === 1 ? "" : "s"}, making it a good anchor for cartridge-first study.`,
+    description: `${cartridge.name} is a ${cartridge.cartridge_type} cartridge in ${cartridge.caliber}. In this encyclopedia it connects to ${compatibleWeaponCount} compatible weapon${compatibleWeaponCount === 1 ? "" : "s"} and ${cartridge.ammo_variants.length} named load${cartridge.ammo_variants.length === 1 ? "" : "s"}, making it a good anchor for cartridge-first study.`,
   };
 }
 

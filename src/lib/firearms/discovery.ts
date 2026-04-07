@@ -14,6 +14,24 @@ export type RecommendedNextItem = {
   reasons?: string[];
 };
 
+const FEATURED_CARTRIDGE_SLUGS = [
+  "5-56x45mm-nato",
+  "7-62x39mm",
+  "5-45x39mm",
+  "7-62x51mm-nato",
+  "9x19mm-nato",
+  "12x70mm",
+];
+
+const FEATURED_WEAPON_SLUGS = [
+  "akm",
+  "ak-74n",
+  "m4a1-carbine",
+  "hk416a5",
+  "sks",
+  "mp5",
+];
+
 export const beginnerStartSections: DiscoveryStep[] = [
   {
     title: "Start with cartridges",
@@ -45,11 +63,33 @@ export function getFeaturedLearningPaths<T extends { items: unknown[] }>(
 }
 
 export function getFeaturedCartridges(cartridges: CartridgeRecord[]) {
-  return cartridges.slice(0, 3);
+  return [...cartridges]
+    .sort((a, b) => {
+      const aPriority = FEATURED_CARTRIDGE_SLUGS.indexOf(a.slug);
+      const bPriority = FEATURED_CARTRIDGE_SLUGS.indexOf(b.slug);
+      const normalizedAPriority =
+        aPriority === -1 ? Number.MAX_SAFE_INTEGER : aPriority;
+      const normalizedBPriority =
+        bPriority === -1 ? Number.MAX_SAFE_INTEGER : bPriority;
+
+      return normalizedAPriority - normalizedBPriority || a.name.localeCompare(b.name);
+    })
+    .slice(0, 3);
 }
 
 export function getFeaturedWeapons(weapons: WeaponRecord[]) {
-  return weapons.slice(0, 3);
+  return [...weapons]
+    .sort((a, b) => {
+      const aPriority = FEATURED_WEAPON_SLUGS.indexOf(a.slug);
+      const bPriority = FEATURED_WEAPON_SLUGS.indexOf(b.slug);
+      const normalizedAPriority =
+        aPriority === -1 ? Number.MAX_SAFE_INTEGER : aPriority;
+      const normalizedBPriority =
+        bPriority === -1 ? Number.MAX_SAFE_INTEGER : bPriority;
+
+      return normalizedAPriority - normalizedBPriority || a.name.localeCompare(b.name);
+    })
+    .slice(0, 3);
 }
 
 export function getSimilarWeapons(

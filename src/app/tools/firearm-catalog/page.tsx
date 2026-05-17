@@ -49,9 +49,9 @@ export default async function FirearmCatalogPage() {
     <main className="min-h-screen bg-black px-6 py-14 text-white sm:py-16">
       <div className="mx-auto max-w-6xl space-y-12">
         <PageHero
-          eyebrow="Firearm + ammunition learning hub"
-          title="Learn by following the links between cartridges, weapons, and use cases."
-          description="This catalog is designed for guided exploration. Start with a round, move into a compatible platform, compare a related entry, and use the recommended next cards to keep going."
+          eyebrow="Catalogs & reference"
+          title="Explore the firearm and ammunition reference catalog."
+          description="This section is one part of Rigdash: a guided reference space for following the links between cartridges, weapons, and use cases."
         />
 
         <section className="grid gap-4 sm:grid-cols-3">

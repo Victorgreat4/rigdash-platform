@@ -24,3 +24,36 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.navigation-busy-indicator {
+  inset: 0 0 auto;
+  height: 3px;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transform: translateY(-3px);
+  transition: opacity 160ms ease, transform 160ms ease;
+  z-index: 100;
+}
+
+.navigation-busy-indicator--active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.navigation-busy-indicator__bar {
+  animation: navigation-busy-slide 1100ms ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, #f5f5f4, transparent);
+  height: 100%;
+  width: 45%;
+}
+
+@keyframes navigation-busy-slide {
+  0% {
+    transform: translateX(-110%);
+  }
+
+  100% {
+    transform: translateX(230%);
+  }
+}

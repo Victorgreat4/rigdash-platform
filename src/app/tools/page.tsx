@@ -12,8 +12,8 @@ export default function ToolsPage() {
           <h1 className="text-5xl font-bold tracking-tight">Tools</h1>
 
           <p className="max-w-3xl text-lg text-zinc-400">
-            Mobile-friendly tools for cataloging weapons, cartridges, guided
-            learning, and future RigDash releases.
+            Utilities, experiments, and current project surfaces inside the
+            broader Rigdash workspace.
           </p>
         </section>
 
@@ -51,10 +51,12 @@ export default function ToolsPage() {
               </span>
             </div>
 
-            <h2 className="mb-2 text-2xl font-semibold">Firearm Catalog</h2>
+            <h2 className="mb-2 text-2xl font-semibold">
+              Catalogs & Reference
+            </h2>
             <p className="text-zinc-400">
-              Browse weapons, cartridges, and compatibility data from the new
-              Supabase-first schema.
+              Browse the current reference catalog for weapons, cartridges, and
+              compatibility data.
             </p>
           </Link>
 

@@ -1,241 +1,146 @@
-import { unstable_noStore as noStore } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-import DiscoveryLinkCard from "@/components/firearms/DiscoveryLinkCard";
-import FeaturedItemCard from "@/components/firearms/FeaturedItemCard";
-import LearningPathCard from "@/components/firearms/LearningPathCard";
-import RecommendedNextSection from "@/components/firearms/RecommendedNextSection";
-import SectionIntro from "@/components/firearms/SectionIntro";
-import HomeComparisonCard from "@/components/home/HomeComparisonCard";
-import HomeContinueCard from "@/components/home/HomeContinueCard";
-import HomeHero from "@/components/home/HomeHero";
-import HomeHighlightedEntryCard from "@/components/home/HomeHighlightedEntryCard";
-import {
-  beginnerStartSections,
-  getFeaturedCartridges,
-  getFeaturedLearningPaths,
-  getFeaturedWeapons,
-} from "@/lib/firearms/discovery";
-import {
-  getContinueLearningLinks,
-  getHomepageComparisons,
-  getRecentHighlightedEntries,
-} from "@/lib/firearms/homepage";
-import {
-  getCartridges,
-  getLearningPaths,
-  getWeapons,
-} from "@/lib/firearms/queries";
+import Link from "next/link";
 
-export default async function Home() {
-  noStore();
+const sections = [
+  {
+    eyebrow: "Live section",
+    title: "Catalogs & Reference",
+    description:
+      "Browse structured reference collections, starting with the current firearm and ammunition catalog.",
+    href: "/tools/firearm-catalog",
+    cta: "Open reference catalog",
+  },
+  {
+    eyebrow: "Active tools",
+    title: "Tools",
+    description:
+      "Small utilities, dashboards, and experiments that can grow into full RigDash workflows.",
+    href: "/tools",
+    cta: "View tools",
+  },
+  {
+    eyebrow: "Standalone research",
+    title: "Genomics",
+    description:
+      "A dedicated place for DNA, genes, and Space Marine-inspired biology research.",
+    href: "/genomics",
+    cta: "Open genomics",
+  },
+  {
+    eyebrow: "Ongoing work",
+    title: "Projects",
+    description:
+      "A place for ideas that are still taking shape, from desktop apps to reference systems and prototypes.",
+    href: "/tools/rigdash-desktop",
+    cta: "See current project",
+  },
+];
 
-  const supabase = await createClient();
-  const [cartridgesResult, weaponsResult, learningPathsResult] =
-    await Promise.all([
-      getCartridges(supabase),
-      getWeapons(supabase),
-      getLearningPaths(supabase),
-    ]);
+const principles = [
+  "Personal home base for different interests",
+  "Clean sections that can expand over time",
+  "Reference-first pages for topics that need structure",
+  "Room for tools, notes, and future research projects",
+];
 
-  const cartridges = cartridgesResult.data ?? [];
-  const weapons = weaponsResult.data ?? [];
-  const learningPaths = learningPathsResult.data ?? [];
-
-  const featuredCartridges = getFeaturedCartridges(cartridges);
-  const featuredWeapons = getFeaturedWeapons(weapons);
-  const featuredLearningPaths = getFeaturedLearningPaths(learningPaths);
-  const suggestedComparisons = getHomepageComparisons(cartridges, weapons);
-  const highlightedEntries = getRecentHighlightedEntries(cartridges, weapons);
-  const continueLearningLinks = getContinueLearningLinks(
-    learningPaths,
-    cartridges,
-    weapons
-  );
-
-  const hasSchemaIssue =
-    Boolean(cartridgesResult.error) ||
-    Boolean(weaponsResult.error) ||
-    Boolean(learningPathsResult.error);
-
+export default function Home() {
   return (
-    <main className="min-h-screen bg-black px-6 py-14 text-white sm:py-16">
-      <div className="mx-auto max-w-6xl space-y-14">
-        <HomeHero />
+    <main className="min-h-screen bg-stone-950 text-white">
+      <section className="border-b border-stone-800 px-6 py-16 sm:py-20">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+          <div className="space-y-6">
+            <div className="inline-flex rounded-full border border-stone-700 px-3 py-1 text-sm text-stone-300">
+              Rigdash home base
+            </div>
 
-        {hasSchemaIssue ? (
-          <section className="rounded-2xl border border-amber-800 bg-amber-950/40 p-5 text-amber-100">
-            <h2 className="text-lg font-semibold">Catalog data is unavailable</h2>
-            <p className="mt-2 text-sm text-amber-200">
-              The homepage structure is ready, but featured entries and learning
-              content need the Supabase schema available before they can load.
+            <div className="space-y-4">
+              <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                A place for catalogs, tools, research, and whatever gets built
+                next.
+              </h1>
+
+              <p className="max-w-3xl text-base leading-7 text-stone-300 sm:text-lg">
+                Rigdash is my personal workspace for organizing ideas into
+                useful sections. Start with the reference catalog, check out the
+                tools area, or follow along as future topics like genomics take
+                shape.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/tools/firearm-catalog"
+                className="rounded-full bg-white px-5 py-3 text-sm font-medium text-stone-950 transition hover:bg-stone-200"
+              >
+                Explore catalogs
+              </Link>
+
+              <Link
+                href="/tools"
+                className="rounded-full border border-stone-700 px-5 py-3 text-sm font-medium text-stone-100 transition hover:border-stone-500"
+              >
+                Browse tools
+              </Link>
+            </div>
+          </div>
+
+          <div className="border-l border-stone-800 pl-6">
+            <div className="text-sm uppercase tracking-[0.2em] text-stone-500">
+              Current focus
+            </div>
+            <div className="mt-4 space-y-4">
+              {principles.map((principle) => (
+                <div
+                  key={principle}
+                  className="border-b border-stone-800 pb-4 text-sm leading-6 text-stone-300 last:border-b-0 last:pb-0"
+                >
+                  {principle}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl space-y-6">
+          <div className="max-w-3xl space-y-3">
+            <div className="text-sm uppercase tracking-[0.2em] text-stone-500">
+              Sections
+            </div>
+            <h2 className="text-3xl font-semibold tracking-tight text-white">
+              Pick a doorway into Rigdash.
+            </h2>
+            <p className="text-stone-400">
+              The site can grow one section at a time without forcing every new
+              idea into the same category.
             </p>
-          </section>
-        ) : null}
+          </div>
 
-        <section className="space-y-5">
-          <SectionIntro
-            eyebrow="Start here for beginners"
-            title="Three simple starting points"
-            description="If this is your first visit, these routes give you an easy way in: start with a cartridge, move into a compatible weapon, then let the site guide the next comparison."
-          />
-
-          <div className="grid gap-4 md:grid-cols-3">
-            {beginnerStartSections.map((section) => (
-              <DiscoveryLinkCard
+          <div className="grid gap-4 md:grid-cols-2">
+            {sections.map((section) => (
+              <Link
                 key={section.title}
-                eyebrow="Beginner path"
-                title={section.title}
-                description={section.description}
                 href={section.href}
-                cta="Start here"
-              />
+                className="group rounded-lg border border-stone-800 bg-stone-900/50 p-6 transition hover:border-stone-500 hover:bg-stone-900"
+              >
+                <div className="text-sm text-stone-500">{section.eyebrow}</div>
+                <h3 className="mt-3 text-2xl font-semibold text-white">
+                  {section.title}
+                </h3>
+                <p className="mt-3 min-h-18 text-sm leading-6 text-stone-400">
+                  {section.description}
+                </p>
+                <div className="mt-6 text-sm font-medium text-stone-200">
+                  {section.cta}
+                  <span className="ml-2 transition group-hover:translate-x-1">
+                    -&gt;
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
-        </section>
-
-        <section className="space-y-5">
-          <SectionIntro
-            eyebrow="Continue learning"
-            title="For returning learners"
-            description="These links are designed for people who already know the basics and want a quick way back into study mode, a learning path, or a useful comparison."
-          />
-
-          <div className="grid gap-4 md:grid-cols-3">
-            {continueLearningLinks.map((item) => (
-              <HomeContinueCard key={item.title} item={item} />
-            ))}
-          </div>
-        </section>
-
-        <section id="featured-cartridges" className="space-y-5">
-          <SectionIntro
-            eyebrow="Featured cartridges"
-            title="Start with the round"
-            description="Cartridge pages are a strong first stop because they build vocabulary fast and naturally connect into weapon pages."
-          />
-
-          <div className="grid gap-4 md:grid-cols-3">
-            {featuredCartridges.map((cartridge) => (
-              <FeaturedItemCard
-                key={cartridge.id}
-                href={`/tools/firearm-catalog/cartridges/${cartridge.slug}`}
-                title={cartridge.name}
-                subtitle={`${cartridge.caliber} / ${cartridge.cartridge_type}`}
-                description={
-                  cartridge.notes ??
-                  "Open this cartridge to understand where it fits and what to compare next."
-                }
-                badges={[
-                  cartridge.manufacturer?.name ?? "Unknown maker",
-                  cartridge.country?.name ?? "Unknown country",
-                ]}
-              />
-            ))}
-          </div>
-        </section>
-
-        <section id="featured-weapons" className="space-y-5">
-          <SectionIntro
-            eyebrow="Featured weapons"
-            title="Then move into platforms"
-            description="Weapon pages help users translate names and specs into clearer ideas about role, compatibility, and platform families."
-          />
-
-          <div className="grid gap-4 md:grid-cols-3">
-            {featuredWeapons.map((weapon) => (
-              <FeaturedItemCard
-                key={weapon.id}
-                href={`/tools/firearm-catalog/weapons/${weapon.slug}`}
-                title={weapon.name}
-                subtitle={[weapon.weapon_type, weapon.platform, weapon.action_type]
-                  .filter(Boolean)
-                  .join(" / ")}
-                description={
-                  weapon.notes ??
-                  "Open this weapon to see why it matters, what it supports, and what to compare next."
-                }
-                badges={[
-                  weapon.manufacturer?.name ?? "Unknown maker",
-                  `${weapon.compatibility.length} linked cartridges`,
-                ]}
-              />
-            ))}
-          </div>
-        </section>
-
-        <section id="learning-paths" className="space-y-5">
-          <SectionIntro
-            eyebrow="Learning paths preview"
-            title="Follow a guided path when you do not want to guess"
-            description="Paths preview the guided side of the platform. They work especially well for beginners, but also help returning users pick up a topic in the right order."
-          />
-
-          <div className="grid gap-4 md:grid-cols-3">
-            {featuredLearningPaths.map((path) => (
-              <LearningPathCard key={path.id} path={path} />
-            ))}
-          </div>
-        </section>
-
-        <section className="space-y-5">
-          <SectionIntro
-            eyebrow="Suggested comparisons"
-            title="Useful side-by-side comparisons"
-            description="Comparison prompts keep the homepage from feeling static. They give users a natural next move instead of leaving them at a dead end."
-          />
-
-          <div className="grid gap-4 md:grid-cols-3">
-            {suggestedComparisons.map((comparison) => (
-              <HomeComparisonCard
-                key={comparison.title}
-                comparison={comparison}
-              />
-            ))}
-          </div>
-        </section>
-
-        <section className="space-y-5">
-          <SectionIntro
-            eyebrow="Recent or highlighted entries"
-            title="Good places to jump back in"
-            description="This section helps the homepage feel alive even without complex visuals. It gives new visitors something concrete to open and returning users something fresh to continue with."
-          />
-
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {highlightedEntries.map((entry) => (
-              <HomeHighlightedEntryCard key={entry.href} entry={entry} />
-            ))}
-          </div>
-        </section>
-
-        <RecommendedNextSection
-          title="What to do next"
-          description="The homepage should always end with obvious next moves. These links keep the study platform and RigDash Desktop easy to reach."
-          items={[
-            {
-              eyebrow: "Open exploration",
-              title: "Browse the firearm catalog",
-              description:
-                "Use the encyclopedia view when you want to explore entries freely and let recommendations guide the next page.",
-              href: "/tools/firearm-catalog",
-            },
-            {
-              eyebrow: "Guided learning",
-              title: "Open all learning paths",
-              description:
-                "Choose a path when you want the platform to handle the study order for you.",
-              href: "/paths",
-            },
-            {
-              eyebrow: "Always intact",
-              title: "Visit RigDash Desktop",
-              description:
-                "Keep the existing RigDash desktop page visible as part of the broader platform.",
-              href: "/tools/rigdash-desktop",
-            },
-          ]}
-        />
-      </div>
+        </div>
+      </section>
     </main>
   );
 }

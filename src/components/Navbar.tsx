@@ -44,16 +44,20 @@ export default async function Navbar() {
         </Link>
 
         <nav className="flex flex-wrap items-center justify-end gap-4 text-sm text-zinc-300 sm:gap-6">
+          <Link href="/tools/firearm-catalog" className="hover:text-white">
+            Catalogs
+          </Link>
+
           <Link href="/tools" className="hover:text-white">
             Tools
           </Link>
 
-          <Link href="/tools/firearm-catalog" className="hover:text-white">
-            Firearm Catalog
+          <Link href="/genomics" className="hover:text-white">
+            Genomics
           </Link>
 
           <Link href="/paths" className="hover:text-white">
-            Paths
+            Learning
           </Link>
 
           {!user ? (

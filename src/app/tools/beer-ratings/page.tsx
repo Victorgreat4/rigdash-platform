@@ -1,27 +1,8 @@
-﻿import { notFound, redirect } from "next/navigation";
-import { unstable_noStore as noStore } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-import { canAccessBeerRatings } from "@/lib/beerRatingsAccess";
 import ratingsData from "@/data/father-beer-ratings.json";
 import BeerRatingsClient from "./BeerRatingsClient";
 import type { BeerRating } from "./types";
 
 export default async function BeerRatingsPage() {
-  noStore();
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  if (!canAccessBeerRatings(user.id, user.email)) {
-    notFound();
-  }
-
   const ratings = ratingsData as BeerRating[];
 
   return (

@@ -203,7 +203,7 @@ export default async function FirearmCatalogPage() {
               eyebrow: "Broader platform",
               title: "Visit the tools overview",
               description:
-                "Keep the wider RigDash ecosystem in view, including the existing desktop page and the preserved beer ratings tool.",
+                "Keep the wider RigDash ecosystem in view, including the existing desktop page.",
               href: "/tools",
             },
           ]}

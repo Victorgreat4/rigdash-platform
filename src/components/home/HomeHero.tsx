@@ -1,10 +1,6 @@
 import Link from "next/link";
 
-type HomeHeroProps = {
-  canSeeBeerRatings: boolean;
-};
-
-export default function HomeHero({ canSeeBeerRatings }: HomeHeroProps) {
+export default function HomeHero() {
   return (
     <section className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
       <div className="space-y-5">
@@ -45,14 +41,6 @@ export default function HomeHero({ canSeeBeerRatings }: HomeHeroProps) {
             RigDash Desktop
           </Link>
 
-          {canSeeBeerRatings ? (
-            <Link
-              href="/tools/beer-ratings"
-              className="rounded-full border border-zinc-700 px-5 py-3 text-sm text-zinc-100 transition hover:border-zinc-500"
-            >
-              Dad&apos;s Beer Ratings
-            </Link>
-          ) : null}
         </div>
       </div>
 

@@ -1,6 +1,5 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { canAccessBeerRatings } from "@/lib/beerRatingsAccess";
 import DiscoveryLinkCard from "@/components/firearms/DiscoveryLinkCard";
 import FeaturedItemCard from "@/components/firearms/FeaturedItemCard";
 import LearningPathCard from "@/components/firearms/LearningPathCard";
@@ -31,14 +30,6 @@ export default async function Home() {
   noStore();
 
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const canSeeBeerRatings = user
-    ? canAccessBeerRatings(user.id, user.email)
-    : false;
-
   const [cartridgesResult, weaponsResult, learningPathsResult] =
     await Promise.all([
       getCartridges(supabase),
@@ -69,7 +60,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-black px-6 py-14 text-white sm:py-16">
       <div className="mx-auto max-w-6xl space-y-14">
-        <HomeHero canSeeBeerRatings={canSeeBeerRatings} />
+        <HomeHero />
 
         {hasSchemaIssue ? (
           <section className="rounded-2xl border border-amber-800 bg-amber-950/40 p-5 text-amber-100">
@@ -219,7 +210,7 @@ export default async function Home() {
 
         <RecommendedNextSection
           title="What to do next"
-          description="The homepage should always end with obvious next moves. These links keep the study platform, RigDash Desktop, and Dad&apos;s Beer Ratings all intact."
+          description="The homepage should always end with obvious next moves. These links keep the study platform and RigDash Desktop easy to reach."
           items={[
             {
               eyebrow: "Open exploration",
@@ -241,13 +232,6 @@ export default async function Home() {
               description:
                 "Keep the existing RigDash desktop page visible as part of the broader platform.",
               href: "/tools/rigdash-desktop",
-            },
-            {
-              eyebrow: "Always intact",
-              title: "Open Dad&apos;s Beer Ratings",
-              description:
-                "The private beer ratings tool remains available without changing its role in the app.",
-              href: canSeeBeerRatings ? "/tools/beer-ratings" : "/login",
             },
           ]}
         />

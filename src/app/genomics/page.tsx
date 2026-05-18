@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import GenomicsDossier from "@/components/genomics/GenomicsDossier";
 
 export const metadata: Metadata = {
-  title: "Genomics Research | Rigdash",
+  title: "Genomics Research & Gene-Seed Dossier | Rigdash",
   description:
-    "A standalone Rigdash space for genomics notes, DNA concepts, and Space Marine-inspired research planning.",
+    "Educational genomics notes and a fictional gene-seed dossier mapped to real biological analogues.",
+  openGraph: {
+    title: "Gene-Seed Dossier | Rigdash Genomics",
+    description:
+      "Educational mappings between fictional gene-seed implants and real biological analogues.",
+  },
 };
 
 const researchTracks = [
@@ -112,6 +118,8 @@ export default function GenomicsPage() {
           </a>
         </div>
       </section>
+
+      <GenomicsDossier />
 
       <section className="px-6 py-12 sm:py-16">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">

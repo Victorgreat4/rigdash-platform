@@ -28,10 +28,10 @@ export default function HomeHero() {
           </Link>
 
           <Link
-            href="/paths"
+            href="/tools/firearm-catalog/learning"
             className="rounded-full border border-zinc-700 px-5 py-3 text-sm text-zinc-100 transition hover:border-zinc-500"
           >
-            Follow a learning path
+            Start a learning journey
           </Link>
 
           <Link

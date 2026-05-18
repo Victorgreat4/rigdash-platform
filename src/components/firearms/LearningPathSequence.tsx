@@ -48,7 +48,7 @@ export default function LearningPathSequence({
               </div>
 
               <Link
-                href={`/paths/${pathSlug}?step=${index + 1}`}
+                href={`/tools/firearm-catalog/learning/${pathSlug}?step=${index + 1}`}
                 className="rounded-full border border-zinc-700 px-3 py-1 text-xs text-zinc-200 transition hover:border-zinc-500"
               >
                 View step

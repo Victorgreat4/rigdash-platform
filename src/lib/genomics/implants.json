@@ -1,0 +1,73 @@
+[
+  {
+    "id": "biscopea",
+    "name": "Biscopea",
+    "category": "implant",
+    "keywords": ["muscle growth", "IGF-1", "myostatin"],
+    "fictional_confidence": 0.88,
+    "estimated_time_to_effect_days": 28,
+    "primary_systems_affected": ["skeletal muscle", "endocrine signaling", "metabolism"],
+    "seo": {
+      "title": "Biscopea Gene-Seed Implant | Fictional Muscle Biology",
+      "meta": "Educational codex entry comparing the fictional Biscopea implant with muscle growth biology and gene regulation.",
+      "keywords": ["Biscopea", "muscle hypertrophy", "gene-seed"]
+    }
+  },
+  {
+    "id": "osmodula",
+    "name": "Osmodula",
+    "category": "implant",
+    "keywords": ["bone density", "skeletal remodeling", "osteoblasts"],
+    "fictional_confidence": 0.9,
+    "estimated_time_to_effect_days": 56,
+    "primary_systems_affected": ["bone", "cartilage", "mineral metabolism"],
+    "seo": {
+      "title": "Osmodula Gene-Seed Implant | Fictional Skeletal Biology",
+      "meta": "A developer-ready codex entry linking the fictional Osmodula to bone remodeling and growth biology.",
+      "keywords": ["Osmodula", "bone density", "skeletal remodeling"]
+    }
+  },
+  {
+    "id": "second-heart",
+    "name": "Second Heart",
+    "category": "implant",
+    "keywords": ["cardiac output", "vascular support", "circulation"],
+    "fictional_confidence": 0.82,
+    "estimated_time_to_effect_days": 42,
+    "primary_systems_affected": ["cardiovascular system", "blood pressure regulation", "oxygen delivery"],
+    "seo": {
+      "title": "Second Heart Gene-Seed Implant | Fictional Cardiovascular Support",
+      "meta": "Educational entry comparing a fictional second heart with cardiac assist concepts and circulatory biology.",
+      "keywords": ["Second Heart", "cardiac output", "gene-seed"]
+    }
+  },
+  {
+    "id": "hemastamen",
+    "name": "Hemastamen",
+    "category": "implant",
+    "keywords": ["blood chemistry", "oxygen transport", "hematopoiesis"],
+    "fictional_confidence": 0.86,
+    "estimated_time_to_effect_days": 35,
+    "primary_systems_affected": ["blood", "bone marrow", "oxygen transport"],
+    "seo": {
+      "title": "Hemastamen Gene-Seed Implant | Fictional Blood Biology",
+      "meta": "Codex entry mapping the fictional Hemastamen to hematopoiesis, oxygen transport, and blood monitoring.",
+      "keywords": ["Hemastamen", "hematopoiesis", "oxygen transport"]
+    }
+  },
+  {
+    "id": "larramans-organ",
+    "name": "Larraman's Organ",
+    "category": "implant",
+    "keywords": ["wound repair", "clotting", "regeneration"],
+    "fictional_confidence": 0.87,
+    "estimated_time_to_effect_days": 21,
+    "primary_systems_affected": ["wound healing", "coagulation", "immune response"],
+    "seo": {
+      "title": "Larraman's Organ Gene-Seed Implant | Fictional Wound Repair",
+      "meta": "Educational codex entry comparing Larraman's Organ with clotting, wound healing, and tissue repair biology.",
+      "keywords": ["Larraman's Organ", "wound healing", "coagulation"]
+    }
+  }
+]
+

@@ -1,4 +1,5 @@
 import { unstable_noStore as noStore } from "next/cache";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import DiscoveryLinkCard from "@/components/firearms/DiscoveryLinkCard";
 import FeaturedItemCard from "@/components/firearms/FeaturedItemCard";
@@ -160,9 +161,18 @@ export default async function FirearmCatalogPage() {
           <SectionIntro
             eyebrow="Guided paths"
             id="learning-paths"
-            title="Learning paths"
-            description="Paths turn the catalog into a step-by-step study experience and tie together encyclopedia reading, study mode, and next-step guidance."
+            title="Go on a learning journey"
+            description="Start a guided route through the firearm catalog when you want the next step chosen for you."
           />
+
+          <div>
+            <Link
+              href="/tools/firearm-catalog/learning"
+              className="inline-flex rounded-full border border-emerald-800 bg-emerald-950/50 px-4 py-2 text-sm text-emerald-100 transition hover:border-emerald-600"
+            >
+              Click here to start a learning journey
+            </Link>
+          </div>
 
           <div className="grid gap-4 md:grid-cols-3">
             {featuredLearningPaths.map((path) => (
@@ -194,10 +204,10 @@ export default async function FirearmCatalogPage() {
             },
             {
               eyebrow: "Broader platform",
-              title: "Browse all learning paths",
+              title: "Start a learning journey",
               description:
-                "Open the dedicated paths index when you want guided sequences rather than free-form browsing.",
-              href: "/paths",
+                "Follow a guided route when you want a clearer order than free-form browsing.",
+              href: "/tools/firearm-catalog/learning",
             },
             {
               eyebrow: "Broader platform",

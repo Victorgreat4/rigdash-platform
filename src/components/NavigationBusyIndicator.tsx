@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const STALE_NAVIGATION_MS = 8000;
 const SETTLE_DELAY_MS = 180;
@@ -46,8 +46,10 @@ function getInternalHref(target: EventTarget | null) {
   return url.href;
 }
 
-export default function NavigationBusyIndicator() {
+function NavigationBusyIndicatorInner() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams.toString();
   const [isPending, setIsPending] = useState(false);
   const staleTimerRef = useRef<number | null>(null);
   const settleTimerRef = useRef<number | null>(null);
@@ -131,7 +133,7 @@ export default function NavigationBusyIndicator() {
       setIsPending(false);
       settleTimerRef.current = null;
     }, SETTLE_DELAY_MS);
-  }, [pathname, isPending]);
+  }, [pathname, search, isPending]);
 
   return (
     <div
@@ -143,5 +145,13 @@ export default function NavigationBusyIndicator() {
     >
       <div className="navigation-busy-indicator__bar" />
     </div>
+  );
+}
+
+export default function NavigationBusyIndicator() {
+  return (
+    <Suspense fallback={null}>
+      <NavigationBusyIndicatorInner />
+    </Suspense>
   );
 }

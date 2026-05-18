@@ -37,10 +37,10 @@ export default function LearningPathCard({ path }: LearningPathCardProps) {
       </div>
 
       <Link
-        href={`/paths/${path.slug}`}
+        href={`/tools/firearm-catalog/learning/${path.slug}`}
         className="mt-auto inline-flex w-fit rounded-full border border-emerald-800 bg-emerald-950/50 px-4 py-2 text-sm text-emerald-100 transition hover:border-emerald-600"
       >
-        Open path
+        Start journey
       </Link>
     </SurfaceCard>
   );

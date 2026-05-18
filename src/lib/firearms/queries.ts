@@ -420,7 +420,7 @@ export function getLearningPathItemSummary(
     slug: item.id,
     description: item.description ?? "Path item details are unavailable.",
     typeLabel: item.entry_type,
-    href: "/paths",
+    href: "/tools/firearm-catalog/learning",
   };
 }
 

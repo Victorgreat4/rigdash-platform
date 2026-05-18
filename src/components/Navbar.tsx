@@ -56,10 +56,6 @@ export default async function Navbar() {
             Genomics
           </Link>
 
-          <Link href="/paths" className="hover:text-white">
-            Learning
-          </Link>
-
           {!user ? (
             <Link href="/login" className="hover:text-white">
               Login

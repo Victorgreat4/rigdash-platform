@@ -171,11 +171,11 @@ export function getContinueLearningLinks(
 
   if (learningPaths[0]) {
     links.push({
-      eyebrow: "Continue with a path",
+      eyebrow: "Continue your journey",
       title: learningPaths[0].title,
       description:
-        "Return to a guided sequence when you want the platform to set the order of study for you.",
-      href: `/paths/${learningPaths[0].slug}`,
+        "Return to a guided route when you want the platform to set the order of study for you.",
+      href: `/tools/firearm-catalog/learning/${learningPaths[0].slug}`,
     });
   }
 

@@ -89,12 +89,12 @@ export default function RigDashDesktopPage() {
                     <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-6">
                         <h2 className="mb-4 text-2xl font-bold">Planned Features</h2>
 
-                        <ul className="space-y-3 text-zinc-300">
-                            <li>• Quick launcher for important tools</li>
-                            <li>• Focused gaming workflow shortcuts</li>
-                            <li>• Lightweight desktop control panel</li>
-                            <li>• Direct access to core utility actions</li>
-                            <li>• Future iteration and release updates</li>
+                        <ul className="list-disc space-y-3 pl-5 text-zinc-300">
+                            <li>Quick launcher for important tools</li>
+                            <li>Focused gaming workflow shortcuts</li>
+                            <li>Lightweight desktop control panel</li>
+                            <li>Direct access to core utility actions</li>
+                            <li>Future iteration and release updates</li>
                         </ul>
                     </div>
 

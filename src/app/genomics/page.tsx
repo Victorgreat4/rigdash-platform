@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ATGCFoundations from "@/components/genomics/ATGCFoundations";
 import GenomicsDossier from "@/components/genomics/GenomicsDossier";
+import TranshumanSystemsMatrix from "@/components/genomics/TranshumanSystemsMatrix";
 
 export const metadata: Metadata = {
-  title: "Genomics Research & Gene-Seed Dossier | Rigdash",
+  title: "Transhuman Biology Lab Notebook | Rigdash Genomics",
   description:
-    "Educational genomics notes and a fictional gene-seed dossier mapped to real biological analogues.",
+    "A grounded lab notebook for DNA foundations, transhuman biology questions, and fictional gene-seed analogues mapped to real biological constraints.",
   openGraph: {
-    title: "Gene-Seed Dossier | Rigdash Genomics",
+    title: "Transhuman Biology Lab Notebook | Rigdash Genomics",
     description:
-      "Educational mappings between fictional gene-seed implants and real biological analogues.",
+      "A grounded systems matrix for fictional transhuman biology, real genomics, constraints, ethics, and Rigdash catalog thinking.",
   },
 };
 
@@ -43,6 +45,33 @@ const starterQuestions = [
   "How should notes be grouped so the topic stays understandable over time?",
 ];
 
+const realityStance = [
+  {
+    title: "Possible now",
+    description:
+      "Reading genomes, diagnosing variants, studying gene expression, using approved gene and cell therapies for specific diseases, and building tissue models for research.",
+  },
+  {
+    title: "Plausible in limited medical contexts",
+    description:
+      "Somatic edits, engineered immune cells, targeted delivery to some tissues, regenerative medicine, implants, prosthetics, and tightly monitored therapies.",
+  },
+  {
+    title: "Still speculative",
+    description:
+      "Whole-body enhancement, safe adult organ redesign, dramatic strength or healing upgrades, stable multi-organ genetic coordination, and anything resembling a complete Space Marine conversion.",
+  },
+];
+
+const glossaryTerms = [
+  ["Base", "One DNA letter: A, T, G, or C."],
+  ["Gene", "A DNA region that can produce RNA or affect a biological function."],
+  ["Codon", "A three-letter RNA unit read during protein translation."],
+  ["Somatic edit", "A non-heritable edit in body cells, usually discussed for disease treatment."],
+  ["Germline edit", "A heritable edit that could be passed to future generations."],
+  ["Polygenic trait", "A trait influenced by many genetic regions plus environment."],
+];
+
 const genomicsAppUrl = "https://helix-forge-os.vercel.app/";
 
 export default function GenomicsPage() {
@@ -52,18 +81,19 @@ export default function GenomicsPage() {
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="max-w-4xl space-y-5">
             <div className="inline-flex rounded-full border border-stone-700 px-3 py-1 text-sm text-stone-300">
-              Genomics research
+              Bioengineering wing
             </div>
 
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              A dedicated workspace for DNA, genes, and Space Marine-inspired
-              biology.
+              A command archive for DNA, transhuman biology, and grounded
+              Space Marine-inspired systems.
             </h1>
 
             <p className="max-w-3xl text-base leading-7 text-stone-300 sm:text-lg">
-              This page starts as a clean research hub. It can grow into notes,
-              explainers, source lists, diagrams, and structured comparisons
-              without being tied to the current catalog or learning path system.
+              Start with the ATGC building blocks, then trace how a fictional
+              warrior-creation myth would collide with real cells, tissues,
+              organs, medical limits, ethics, and catalog logic. The ambition is
+              big; the stance stays grounded.
             </p>
           </div>
 
@@ -93,6 +123,22 @@ export default function GenomicsPage() {
       </section>
 
       <section className="px-6 py-12 sm:py-16">
+        <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
+          {realityStance.map((item) => (
+            <article
+              key={item.title}
+              className="rounded-lg border border-stone-800 bg-stone-900/50 p-6"
+            >
+              <h2 className="text-xl font-semibold">{item.title}</h2>
+              <p className="mt-3 text-sm leading-6 text-stone-400">
+                {item.description}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="px-6 py-12 sm:py-16">
         <div className="mx-auto grid max-w-6xl gap-6 rounded-lg border border-cyan-900/60 bg-cyan-950/20 p-6 md:grid-cols-[1fr_auto] md:items-center">
           <div className="space-y-3">
             <div className="text-sm uppercase tracking-[0.2em] text-cyan-300">
@@ -118,6 +164,10 @@ export default function GenomicsPage() {
           </a>
         </div>
       </section>
+
+      <ATGCFoundations />
+
+      <TranshumanSystemsMatrix />
 
       <GenomicsDossier />
 
@@ -168,6 +218,43 @@ export default function GenomicsPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="px-6 pb-16">
+        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <article className="rounded-lg border border-amber-800 bg-amber-950/25 p-6">
+            <div className="text-sm uppercase tracking-[0.2em] text-amber-300">
+              Grounded stance
+            </div>
+            <h2 className="mt-3 text-2xl font-semibold">
+              Real-life Space Marines are not a current engineering problem.
+            </h2>
+            <p className="mt-4 text-sm leading-6 text-amber-50/90">
+              The realistic path is not a secret formula or one powerful gene
+              edit. It would be a long medical frontier involving disease-grade
+              gene therapy, cell therapy, implants, prosthetics, tissue
+              engineering, training science, trauma medicine, and strict
+              oversight. The fictional version compresses decades of biology,
+              surgery, development, risk, and ethics into a clean myth.
+            </p>
+          </article>
+
+          <article className="rounded-lg border border-stone-800 bg-stone-900/50 p-6">
+            <div className="text-sm uppercase tracking-[0.2em] text-stone-500">
+              Glossary
+            </div>
+            <dl className="mt-5 grid gap-4 md:grid-cols-2">
+              {glossaryTerms.map(([term, definition]) => (
+                <div key={term} className="border-t border-stone-800 pt-4">
+                  <dt className="font-semibold text-stone-100">{term}</dt>
+                  <dd className="mt-2 text-sm leading-6 text-stone-400">
+                    {definition}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </article>
         </div>
       </section>
     </main>

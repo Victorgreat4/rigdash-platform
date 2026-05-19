@@ -49,7 +49,7 @@ export default function ToolsPage() {
                 Windows
               </span>
               <span className="rounded-full border border-amber-700 px-3 py-1 text-xs text-amber-300">
-                In Progress
+                Released
               </span>
             </div>
 

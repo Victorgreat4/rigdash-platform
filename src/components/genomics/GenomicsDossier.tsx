@@ -323,7 +323,7 @@ export default function GenomicsDossier() {
 
         <section className="grid gap-4 md:grid-cols-2">
           <article className="rounded-lg border border-stone-800 bg-black/20 p-6">
-            <h3 className="text-xl font-semibold">Educator's Guide</h3>
+            <h3 className="text-xl font-semibold">Educator&apos;s Guide</h3>
             <p className="mt-3 text-sm leading-6 text-stone-400">
               Use each entry to separate fiction, feasible biology, and current
               uncertainty. Ask learners to identify the real cell types,
@@ -372,4 +372,3 @@ columns:
     </section>
   );
 }
-

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ATGCFoundations from "@/components/genomics/ATGCFoundations";
 import GenomicsDossier from "@/components/genomics/GenomicsDossier";
+import GenomicsSectionNav from "@/components/genomics/GenomicsSectionNav";
 import TranshumanSystemsMatrix from "@/components/genomics/TranshumanSystemsMatrix";
 
 export const metadata: Metadata = {
@@ -77,6 +78,8 @@ const genomicsAppUrl = "https://helix-forge-os.vercel.app/";
 export default function GenomicsPage() {
   return (
     <main className="min-h-screen bg-stone-950 text-white">
+      <GenomicsSectionNav active="notebook" />
+
       <section className="border-b border-stone-800 px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="max-w-4xl space-y-5">

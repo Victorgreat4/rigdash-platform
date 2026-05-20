@@ -176,10 +176,6 @@ export default function GenomicsDossier() {
             scientific analogues for educational purposes only. It does not
             describe real therapies, medical advice, or implementation guidance.
           </p>
-          <p className="max-w-3xl text-sm leading-6 text-stone-400">
-            <strong>Lore Source:</strong> Provided Space Marines transcript,
-            cited here as the canonical fiction reference for this draft.
-          </p>
           <div className="grid gap-3 text-sm text-stone-400 md:grid-cols-2">
             <p>
               <strong className="text-stone-200">og:title:</strong> Gene-Seed
@@ -232,10 +228,6 @@ export default function GenomicsDossier() {
               <p className="mt-3 text-sm leading-6 text-stone-300">
                 <strong>Summary:</strong> {implant.summary}
               </p>
-              <p className="mt-2 text-xs uppercase tracking-[0.16em] text-stone-500">
-                Lore Source: Provided Space Marines transcript
-              </p>
-
               <div className="mt-6 space-y-5 text-sm leading-6 text-stone-300">
                 <section aria-labelledby={`${implant.id}-mechanism`}>
                   <h4 id={`${implant.id}-mechanism`} className="font-semibold text-stone-100">
